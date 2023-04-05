@@ -1,0 +1,49 @@
+version: "3.4"
+
+services:
+  # NocoBase
+  nocobase:
+    image: nocobase/nocobase:main
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      DB_DIALECT: ${DB_DIALECT}
+      DB_HOST: ${DB_HOST}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      LOCAL_STORAGE_BASE_URL: ${LOCAL_STORAGE_BASE_URL}
+      TZ: ${TZ}
+    volumes:
+      - nfs_nocobase:/app/nocobase/storage
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nocobase.rule=Host(`nocobase.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.nocobase.entrypoints=websecure"
+        - "traefik.http.routers.nocobase.service=nocobase"
+        - "traefik.http.routers.nocobase.middlewares=noauth-chain@file"
+        - "traefik.http.services.nocobase.loadbalancer.server.port=80"
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true
+
+networks:
+  network_cluster:
+    external: true
+
+x-common-keys-volume: &common-keys-volume
+  type: nfs
+  o: addr=${NFS_SERVER},rw,nfsvers=4
+
+volumes:
+  # NFS
+  nfs_nocobase:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/nocobase/storage
