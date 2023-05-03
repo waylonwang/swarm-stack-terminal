@@ -9,6 +9,7 @@ services:
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
+      DB_LOGGING: ${DB_LOGGING}       
       DB_DIALECT: ${DB_DIALECT}
       DB_HOST: ${DB_HOST}
       DB_DATABASE: ${DB_DATABASE}
@@ -16,13 +17,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       LOCAL_STORAGE_BASE_URL: ${LOCAL_STORAGE_BASE_URL}
       TZ: ${TZ}
-      DB_LOGGING: "on"
-      APP_ENV: "development"
-    ports:
-      - target: 13000
-        published: 13000
-        protocol: tcp
-        mode: host      
     volumes:
       - nfs_nocobase:/app/nocobase/storage
     deploy:
