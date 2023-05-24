@@ -56,7 +56,7 @@ services:
         - "traefik.http.routers.transmission.middlewares=noauth-chain@file"
         - "traefik.http.services.transmission.loadbalancer.server.port=9091"
         - "traefik.tcp.routers.pt_torrent.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.pt_torrent.entrypoints=tr_torrent"
+        - "traefik.tcp.routers.pt_torrent.entrypoints=mariadb"
         - "traefik.tcp.routers.pt_torrent.service=pt_torrent"
         - "traefik.tcp.services.pt_torrent.loadbalancer.server.port=51413"            
       mode: replicated
