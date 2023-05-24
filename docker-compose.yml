@@ -34,6 +34,38 @@ services:
           - node.labels.type == vm
           - node.labels.application == true
 
+  # Transmission
+  transmission:
+    image: helloz/transmission:latest
+    networks: [network_cluster]
+    restart: on-failure  
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      USERNAME: ${PT_USERNAME}       
+      PASSWORD: ${PT_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - /dev/sdb1:/root/Downloads
+      - nfs_transmission:/root/.config/transmission-daemon
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.transmission.rule=Host(`pt.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.transmission.entrypoints=websecure"
+        - "traefik.http.routers.transmission.service=transmission"
+        - "traefik.http.routers.transmission.middlewares=noauth-chain@file"
+        - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+        - "traefik.tcp.routers.torrent.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.torrent.entrypoints=torrent"
+        - "traefik.tcp.routers.torrent.service=torrent"
+        - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"        
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.download == true
+
 networks:
   network_cluster:
     external: true
@@ -49,3 +81,8 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/nocobase/storage
+  nfs_transmission:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/transmission/config
