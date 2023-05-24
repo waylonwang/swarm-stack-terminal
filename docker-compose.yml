@@ -58,7 +58,7 @@ services:
         - "traefik.tcp.routers.torrent.rule=HostSNI(`*`)"
         - "traefik.tcp.routers.torrent.entrypoints=torrent"
         - "traefik.tcp.routers.torrent.service=torrent"
-        - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"        
+        - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"            
       mode: replicated
       replicas: 1
       placement:
