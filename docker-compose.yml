@@ -45,7 +45,7 @@ services:
       PASSWORD: ${PT_PASSWORD}
       TZ: ${TZ}
     volumes:
-      - /dev/sdb1:/root/Downloads
+      - /mnt/downloads:/root/Downloads
       - nfs_transmission:/root/.config/transmission-daemon
     deploy:
       labels:
