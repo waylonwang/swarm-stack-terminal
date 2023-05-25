@@ -154,7 +154,7 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/download/nastool/config   
+      device: :${NFS_DEVICE}/application/download/nastools/config   
   nfs_nastools_media:
     driver: local
     driver_opts:
