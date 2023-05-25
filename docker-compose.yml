@@ -109,7 +109,7 @@ services:
     volumes:
       - /mnt/downloads:/downloads
       - nfs_nastools_media:/media
-      - nfs_nastools_config:/config
+      # - nfs_nastools_config:/config
     deploy:
       labels:
         - "traefik.enable=true"
