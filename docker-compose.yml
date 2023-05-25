@@ -109,7 +109,7 @@ services:
     volumes:
       - /mnt/downloads:/downloads
       - nfs_nastools_media:/media
-      # - nfs_nastools_config:/config
+      - nfs_nastools_config:/config
     deploy:
       labels:
         - "traefik.enable=true"
@@ -154,7 +154,7 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/download/nastools/config   
+      device: :${NFS_DEVICE}/application/download/nastools/config
   nfs_nastools_media:
     driver: local
     driver_opts:
