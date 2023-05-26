@@ -95,7 +95,7 @@ services:
 
   # NAS-Tools
   nas-tools:
-    image: shmilyin/nas-tools
+    image: sungamma/nas-tools:2.9.1
     networks: [network_cluster]
     restart: on-failure  
     environment:
