@@ -95,7 +95,7 @@ services:
 
   # NAS-Tools
   nas-tools:
-    image: diluka/nas-tools
+    image: shmilyin/nas-tools
     networks: [network_cluster]
     restart: on-failure  
     environment:
