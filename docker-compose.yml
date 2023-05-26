@@ -111,6 +111,11 @@ services:
       # - /mnt/downloads:/downloads
       # - nfs_nastools_media:/media
       # - nfs_nastools_config:/config
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
     deploy:
       labels:
         - "traefik.enable=true"
