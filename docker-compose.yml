@@ -93,7 +93,7 @@ services:
           - node.labels.type == vm
           - node.labels.download == true
 
-  NAS-Tools
+  # NAS-Tools
   nas-tools:
     image: diluka/nas-tools
     networks: [network_cluster]
