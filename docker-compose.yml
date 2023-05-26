@@ -95,7 +95,7 @@ services:
 
   # NAS-Tools
   nas-tools:
-    image: ddsderek/nas-tools:3.1.3-debian
+    image: diluka/nas-tools
     networks: [network_cluster]
     restart: on-failure  
     environment:
