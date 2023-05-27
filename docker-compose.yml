@@ -36,17 +36,20 @@ services:
 
   # Transmission
   transmission:
-    image: helloz/transmission:latest
+    image: chisbread/transmission:latest
     networks: [network_cluster]
     restart: on-failure  
     environment:
       # 直接使用Portainer容器内的环境变量
-      USERNAME: ${PT_USERNAME}       
-      PASSWORD: ${PT_PASSWORD}
+      PUID: ${TR_PUID}
+      PGID: ${TR_PGID}
+      USERNAME: ${TR_USERNAME}       
+      PASSWORD: ${TR_PASSWORD}
       TZ: ${TZ}
     volumes:
-      - /mnt/downloads:/root/Downloads
-      - nfs_transmission:/root/.config/transmission-daemon
+      - nfs_transmission_config:/config
+      - nfs_transmission_downloads:/downloads
+      - nfs_transmission_watch:/watch
     deploy:
       labels:
         - "traefik.enable=true"
@@ -55,10 +58,10 @@ services:
         - "traefik.http.routers.transmission.service=transmission"
         - "traefik.http.routers.transmission.middlewares=noauth-chain@file"
         - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-        - "traefik.tcp.routers.torrent.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.torrent.entrypoints=torrent"
-        - "traefik.tcp.routers.torrent.service=torrent"
-        - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"            
+        # - "traefik.tcp.routers.torrent.rule=HostSNI(`*`)"
+        # - "traefik.tcp.routers.torrent.entrypoints=torrent"
+        # - "traefik.tcp.routers.torrent.service=torrent"
+        # - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"            
       mode: replicated
       replicas: 1
       placement:
@@ -139,6 +142,10 @@ x-common-keys-volume: &common-keys-volume
   type: nfs
   o: addr=${NFS_SERVER},rw,nfsvers=4
 
+x-common-media-volume: &common-media-volume
+  type: nfs
+  o: addr=${MEDIA_SERVER},rw,nfsvers=4
+
 volumes:
   # NFS
   nfs_nocobase:
@@ -146,11 +153,21 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/nocobase/storage
-  nfs_transmission:
+  nfs_transmission_config:
     driver: local
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/download/transmission/config
+  nfs_transmission_downloads:
+    driver: local
+    driver_opts:
+      <<: *common-media-volume
+      device: :${MEDIA_DEVICE}    
+  nfs_transmission_watch:
+    driver: local
+    driver_opts:
+      <<: *common-media-volume
+      device: :${MEDIA_DEVICE}/watch        
   # nfs_hlink:
   #   driver: local
   #   driver_opts:
@@ -166,3 +183,4 @@ volumes:
   #   driver_opts:
   #     <<: *common-keys-volume
   #     device: :/volume4/video
+  
