@@ -48,7 +48,7 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_transmission_config:/config
-      - nfs_transmission_downloads:/downloads
+      - nfs_transmission_downloads:/media
       - nfs_transmission_watch:/watch
     deploy:
       labels:
