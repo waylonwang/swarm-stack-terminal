@@ -67,7 +67,7 @@ services:
         - homepage.icon=transmission.png
         - homepage.href=https://pt.${DOMAIN_SWARM}:4/
         - homepage.description=PT下载器
-        - homepage.showStats=true      
+        - homepage.ping=http://transmission/
         - homepage.widget.type=transmission
         - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
         - homepage.widget.username=${TR_USERNAME}  
