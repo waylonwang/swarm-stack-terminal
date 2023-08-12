@@ -69,7 +69,7 @@ services:
         - homepage.description=PT下载器
         - homepage.showStats=true      
         - homepage.widget.type=transmission
-        - homepage.widget.url=https://jackett.${DOMAIN_SWARM}:4    
+        - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
         - homepage.widget.username=${TR_USERNAME}  
         - homepage.widget.password=${TR_PASSWORD}             
       mode: replicated
