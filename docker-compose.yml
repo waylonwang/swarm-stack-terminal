@@ -61,7 +61,17 @@ services:
         # - "traefik.tcp.routers.torrent.rule=HostSNI(`*`)"
         # - "traefik.tcp.routers.torrent.entrypoints=torrent"
         # - "traefik.tcp.routers.torrent.service=torrent"
-        # - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"            
+        # - "traefik.tcp.services.torrent.loadbalancer.server.port=51413"   
+        - homepage.group=Application
+        - homepage.name=Transmission
+        - homepage.icon=transmission.png
+        - homepage.href=https://pt.${DOMAIN_SWARM}:4/
+        - homepage.description=PT下载器
+        - homepage.showStats=true      
+        - homepage.widget.type=transmission
+        - homepage.widget.url=https://jackett.${DOMAIN_SWARM}:4    
+        - homepage.widget.username=${TR_USERNAME}  
+        - homepage.widget.password=${TR_PASSWORD}             
       mode: replicated
       replicas: 1
       placement:
