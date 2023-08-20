@@ -49,7 +49,8 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_transmission_config:/config
-      - nfs_transmission_downloads:/media
+      - nfs_transmission_main_downloads:/media
+      - nfs_transmission_ext_downloads:/media_ext
       - nfs_transmission_watch:/watch
     deploy:
       labels:
@@ -153,9 +154,13 @@ x-common-keys-volume: &common-keys-volume
   type: nfs
   o: addr=${NFS_SERVER},rw,nfsvers=4
 
-x-common-media-volume: &common-media-volume
+x-common-media-main-volume: &common-media-main-volume
   type: nfs
   o: addr=${MEDIA_SERVER},rw,nfsvers=4
+
+x-common-media-ext-volume: &common-media-ext-volume
+  type: nfs
+  o: addr=${MEDIA_EXT_SERVER},rw,nfsvers=4
 
 volumes:
   # NFS
@@ -169,15 +174,20 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/download/transmission/config
-  nfs_transmission_downloads:
+  nfs_transmission_main_downloads:
     driver: local
     driver_opts:
-      <<: *common-media-volume
-      device: :${MEDIA_DEVICE}    
+      <<: *common-media-main-volume
+      device: :${MEDIA_DEVICE}   
+  nfs_transmission_ext_downloads:
+    driver: local
+    driver_opts:
+      <<: *common-media-ext-volume
+      device: :${MEDIA_DEVICE}       
   nfs_transmission_watch:
     driver: local
     driver_opts:
-      <<: *common-media-volume
+      <<: *common-media-main-volume
       device: :${MEDIA_DEVICE}/watch        
   # nfs_hlink:
   #   driver: local
