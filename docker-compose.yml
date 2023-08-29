@@ -29,7 +29,7 @@ services:
         - "traefik.http.routers.nocobase.middlewares=noauth-chain@file"
         - "traefik.http.services.nocobase.loadbalancer.server.port=80"
         - homepage.group=Application
-        - homepage.name=NocoBase
+        - homepage.name=云谷之家
         - homepage.icon=https://www.waylon.wang:4/images/services/nocobase.png
         - homepage.href=https://nocobase.${DOMAIN_SWARM}:4/
         - homepage.description=NocoBase低代码系统
