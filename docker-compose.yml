@@ -77,6 +77,7 @@ services:
         - homepage.href=https://pt.${DOMAIN_SWARM}:4/
         - homepage.description=PT下载器
         - homepage.ping=http://transmission:9091
+        - homepage.weight=2        
         - homepage.widget.type=transmission
         - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
         - homepage.widget.username=${TR_USERNAME}  
