@@ -80,8 +80,8 @@ services:
         - homepage.weight=2        
         - homepage.widget.type=transmission
         - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
-        - homepage.widget.username=${TR_USERNAME}  
-        - homepage.widget.password=${TR_PASSWORD}             
+        - homepage.widget.username=${TR_USERNAME}
+        - homepage.widget.password=${TR_PASSWORD}
       mode: replicated
       replicas: 1
       placement:
