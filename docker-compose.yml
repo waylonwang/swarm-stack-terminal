@@ -94,6 +94,11 @@ services:
     image: oldiy/baidupcs:latest
     networks: [network_cluster]
     restart: on-failure  
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      PUID: ${TR_PUID}
+      PGID: ${TR_PGID}
+      TZ: ${TZ}    
     volumes:
       - nfs_baidupcs_config:/root/.config/BaiduPCS-Go
       - nfs_baidupcs_client:/opt/BaiduPCS
