@@ -100,9 +100,9 @@ services:
       PGID: ${TR_PGID}
       TZ: ${TZ}    
     volumes:
-      - nfs_baidupcs_config:/root/.config/BaiduPCS-Go
-      - nfs_baidupcs_client:/opt/BaiduPCS
-      - nfs_baidupcs_download:/download
+      # - nfs_baidupcs_config:/root/.config/BaiduPCS-Go
+      # - nfs_baidupcs_client:/opt/BaiduPCS
+      # - nfs_baidupcs_download:/download
     deploy:
       labels:
         - "traefik.enable=true"
