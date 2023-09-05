@@ -242,5 +242,5 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${DOWNLOAD_DEVICE}/baidpcs
+      device: :${DOWNLOAD_DEVICE}/baidupcs
   
