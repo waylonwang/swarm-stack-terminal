@@ -89,6 +89,37 @@ services:
           - node.labels.type == vm
           - node.labels.download == true
 
+  # BaiduPCS
+  baidupcs:
+    image: oldiy/baidupcs:latest
+    networks: [network_cluster]
+    restart: on-failure  
+    volumes:
+      - nfs_baidupcs_conf:/root/.config/BaiduPCS-Go
+      - nfs_baidupcs_config:/opt/BaiduPCS
+      - nfs_baidupcs_download:/download
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.baidupcs.rule=Host(`baidupcs.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.baidupcs.entrypoints=websecure"
+        - "traefik.http.routers.baidupcs.service=baidupcs"
+        - "traefik.http.routers.baidupcs.middlewares=noauth-chain@file"
+        - "traefik.http.services.baidupcs.loadbalancer.server.port=5299"
+        - homepage.group=Application
+        - homepage.name=BaiduPCS
+        - homepage.icon=baidu.png
+        - homepage.href=https://baidupcs.${DOMAIN_SWARM}:4/
+        - homepage.description=百度云盘下载器
+        - homepage.ping=http://baidupcs:5299
+        - homepage.weight=3        
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.download == true
+
   # # Hlink
   # hlink:
   #   image: likun7981/hlink:latest
@@ -197,19 +228,19 @@ volumes:
     driver_opts:
       <<: *common-media-main-volume
       device: :${MEDIA_DEVICE}/watch        
-  # nfs_hlink:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/download/hlink/share   
-  # nfs_nastools_config:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/download/nastools/config
-  # nfs_nastools_media:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :/volume4/video
+  nfs_baidupcs_client:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/baidupcs/client   
+  nfs_baidupcs_config:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/baidupcs/config
+  nfs_baidupcs_download:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${DOWNLOAD_DEVICE}/baidpcs
   
