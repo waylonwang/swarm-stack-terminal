@@ -27,6 +27,7 @@ services:
         - "traefik.http.routers.nocobase.entrypoints=websecure"
         - "traefik.http.routers.nocobase.service=nocobase"
         - "traefik.http.routers.nocobase.middlewares=noauth-chain@file,cors-headers@file"
+        - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
         - "traefik.http.services.nocobase.loadbalancer.server.port=80"
         - homepage.group=Application
         - homepage.name=云谷之家
