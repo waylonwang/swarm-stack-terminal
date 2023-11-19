@@ -193,14 +193,12 @@ services:
   # XiaoaiGPT
   xiaogpt1:
     image: yihong0618/xiaogpt
-    entrypoint: ["tail","-f","xiaogpt.py"]
-    # command: --config=/config/config.json
+    # entrypoint: ["tail","-f","xiaogpt.py"]
+    command: --config=/config/config.json
     networks: [network_cluster]
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
-      PUID: 0
-      PGID: 0
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt1_config:/config
