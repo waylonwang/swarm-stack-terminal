@@ -204,7 +204,7 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt1_config:/config
-      - nfs_xiaogpt1_src:/app/xiaogpt
+      - nfs_xiaogpt1_src:/app
     deploy:
       mode: replicated
       replicas: 1
@@ -280,4 +280,4 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt1/src/xiaogpt
+      device: :${NFS_DEVICE}/application/ai/xiaogpt1/src
