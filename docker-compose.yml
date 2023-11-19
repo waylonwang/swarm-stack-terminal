@@ -304,7 +304,7 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${DOWNLOAD_DEVICE}/baidupcs
-  nfs_xiaogpt1_src:
+  nfs_xiaogpt_src:
     driver: local
     driver_opts:
       <<: *common-keys-volume
