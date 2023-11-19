@@ -201,7 +201,7 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt1_config:/config
-      - nfs_xiaogpt1_src:/app/xiaogpt
+      # - nfs_xiaogpt1_src:/app/xiaogpt
     deploy:
       mode: replicated
       replicas: 1
