@@ -193,7 +193,7 @@ services:
   # XiaoaiGPT
   xiaogpt1:
     image: yihong0618/xiaogpt
-    entrypoint: [".venv/bin/python3"]
+    entrypoint: ["tail","-f","xiaogpt.py"]
     # command: --config=/config/config.json
     networks: [network_cluster]
     restart: on-failure
