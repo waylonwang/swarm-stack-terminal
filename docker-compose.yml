@@ -193,8 +193,8 @@ services:
   # XiaoaiGPT
   xiaogpt1:
     image: yihong0618/xiaogpt
-    entrypoint: ["tail","-f","xiaogpt.py"]
-    # command: --config=/config/config.json
+    # entrypoint: ["tail","-f","xiaogpt.py"]
+    command: --config=/config/config.json
     networks: [network_cluster]
     restart: on-failure
     environment:
