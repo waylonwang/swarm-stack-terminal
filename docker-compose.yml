@@ -202,6 +202,7 @@ services:
     volumes:
       - nfs_xiaogpt_config1:/config
       - nfs_xiaogpt_src:/app/xiaogpt
+      - nfs_xiaogpt_micli:/app/micli      
     deploy:
       mode: replicated
       replicas: 1
@@ -308,7 +309,12 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt/src/xiaogpt
+      device: :${NFS_DEVICE}/application/ai/xiaogpt/src/xiaogpt  
+  nfs_xiaogpt_micli:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/ai/xiaogpt/src/micli          
   nfs_xiaogpt_config1:
     driver: local
     driver_opts:
