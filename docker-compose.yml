@@ -191,60 +191,60 @@ services:
   #         - node.labels.download == true
 
   # XiaoaiGPT
-  xiaogpt1:
-    image: yihong0618/xiaogpt
-    command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
-    environment:
-      # 直接使用Portainer容器内的环境变量
-      TZ: ${TZ}
-    volumes:
-      - nfs_xiaogpt_config1:/config
-      - nfs_xiaogpt_src:/app/xiaogpt 
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true
-  xiaogpt2:
-    image: yihong0618/xiaogpt
-    command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
-    environment:
-      # 直接使用Portainer容器内的环境变量
-      TZ: ${TZ}
-    volumes:
-      - nfs_xiaogpt_config2:/config
-      - nfs_xiaogpt_src:/app/xiaogpt
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true
-  xiaogpt3:
-    image: yihong0618/xiaogpt
-    command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
-    environment:
-      # 直接使用Portainer容器内的环境变量
-      TZ: ${TZ}
-    volumes:
-      - nfs_xiaogpt_config3:/config
-      - nfs_xiaogpt_src:/app/xiaogpt
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true                    
+  # xiaogpt1:
+  #   image: yihong0618/xiaogpt
+  #   command: --config=/config/config.json
+  #   networks: [network_cluster]
+  #   restart: on-failure
+  #   environment:
+  #     # 直接使用Portainer容器内的环境变量
+  #     TZ: ${TZ}
+  #   volumes:
+  #     - nfs_xiaogpt_config1:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt 
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.application == true
+  # xiaogpt2:
+  #   image: yihong0618/xiaogpt
+  #   command: --config=/config/config.json
+  #   networks: [network_cluster]
+  #   restart: on-failure
+  #   environment:
+  #     # 直接使用Portainer容器内的环境变量
+  #     TZ: ${TZ}
+  #   volumes:
+  #     - nfs_xiaogpt_config2:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.application == true
+  # xiaogpt3:
+  #   image: yihong0618/xiaogpt
+  #   command: --config=/config/config.json
+  #   networks: [network_cluster]
+  #   restart: on-failure
+  #   environment:
+  #     # 直接使用Portainer容器内的环境变量
+  #     TZ: ${TZ}
+  #   volumes:
+  #     - nfs_xiaogpt_config3:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.application == true                    
 
 networks:
   network_cluster:
@@ -304,23 +304,23 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${DOWNLOAD_DEVICE}/baidupcs
-  nfs_xiaogpt_src:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt/src/xiaogpt        
-  nfs_xiaogpt_config1:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt/config1
-  nfs_xiaogpt_config2:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt/config2
-  nfs_xiaogpt_config3:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/ai/xiaogpt/config3         
+  # nfs_xiaogpt_src:
+  #   driver: local
+  #   driver_opts:
+  #     <<: *common-keys-volume
+  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/src/xiaogpt        
+  # nfs_xiaogpt_config1:
+  #   driver: local
+  #   driver_opts:
+  #     <<: *common-keys-volume
+  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config1
+  # nfs_xiaogpt_config2:
+  #   driver: local
+  #   driver_opts:
+  #     <<: *common-keys-volume
+  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config2
+  # nfs_xiaogpt_config3:
+  #   driver: local
+  #   driver_opts:
+  #     <<: *common-keys-volume
+  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config3         
