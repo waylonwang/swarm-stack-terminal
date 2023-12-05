@@ -33,7 +33,7 @@ services:
         - homepage.icon=https://www.waylon.wang:4/images/services/nocobase.png
         - homepage.href=https://nocobase.${DOMAIN_SWARM}:4/
         - homepage.description=NocoBase低代码系统
-        - homepage.ping=http://nocobase
+        - homepage.siteMonitor=http://nocobase
         - homepage.weight=1
       mode: replicated
       replicas: 1
@@ -116,7 +116,7 @@ services:
         - homepage.icon=baidu.png
         - homepage.href=https://baidupcs.${DOMAIN_SWARM}:4/
         - homepage.description=百度云盘下载器
-        - homepage.ping=http://baidupcs:5299
+        - homepage.siteMonitor=http://baidupcs:5299
         - homepage.weight=3        
       mode: replicated
       replicas: 1
