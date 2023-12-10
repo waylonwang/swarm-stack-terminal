@@ -125,126 +125,46 @@ services:
           - node.labels.type == vm
           - node.labels.download == true
 
-  # # Hlink
-  # hlink:
-  #   image: likun7981/hlink:latest
-  #   networks: [network_cluster]
-  #   restart: on-failure  
-  #   environment:
-  #     HLINK_HOME: /share/data/hlinkDocker
-  #     # 直接使用Portainer容器内的环境变量
-  #     TZ: ${TZ}
-  #   volumes:
-  #     - /mnt/downloads:/downloads
-  #     - nfs_hlink:/share
-  #   deploy:
-  #     labels:
-  #       - "traefik.enable=true"
-  #       - "traefik.http.routers.hlink.rule=Host(`hlink.${DOMAIN_SWARM}`)"
-  #       - "traefik.http.routers.hlink.entrypoints=websecure"
-  #       - "traefik.http.routers.hlink.service=hlink"
-  #       - "traefik.http.routers.hlink.middlewares=noauth-chain@file"
-  #       - "traefik.http.services.hlink.loadbalancer.server.port=9090"          
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.download == true
-
-  # # NAS-Tools
-  # nas-tools:
-  #   image: shmilyin/nas-tools:2.9.1
-  #   networks: [network_cluster]
-  #   restart: on-failure  
-  #   environment:
-  #     PUID: 0    # 想切换为哪个用户来运行程序，该用户的uid
-  #     PGID: 0    # 想切换为哪个用户来运行程序，该用户的gid
-  #     UMASK: 000 # 掩码权限，默认000，可以考虑设置为022
-  #     NASTOOL_AUTO_UPDATE: "false"  # 如需在启动容器时自动升级程程序请设置为true
-  #     NASTOOL_CN_UPDATE: "false" # 如果开启了容器启动自动升级程序，并且网络不太友好时，可以设置为true，会使用国内源进行软件更新
-  #     # REPO_UR: https://github.com/wangyan/nas-tools.git  # 当你访问github网络很差时，可以考虑解释本行注释
-  #     # 直接使用Portainer容器内的环境变量
-  #     TZ: ${TZ}
-  #   volumes:
-  #     - /mnt/downloads:/downloads
-  #     - nfs_nastools_media:/media
-  #     - nfs_nastools_config:/config
-  #   ports:
-  #     - target: 3000
-  #       published: 3000
-  #       protocol: tcp
-  #       mode: host
-  #   deploy:
-  #     labels:
-  #       - "traefik.enable=true"
-  #       - "traefik.http.routers.nastools.rule=Host(`nastools.${DOMAIN_SWARM}`)"
-  #       - "traefik.http.routers.nastools.entrypoints=websecure"
-  #       - "traefik.http.routers.nastools.service=nastools"
-  #       - "traefik.http.routers.nastools.middlewares=noauth-chain@file"
-  #       - "traefik.http.services.nastools.loadbalancer.server.port=3000"          
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.download == true
-
-  # XiaoaiGPT
-  # xiaogpt1:
-  #   image: yihong0618/xiaogpt
-  #   command: --config=/config/config.json
-  #   networks: [network_cluster]
-  #   restart: on-failure
-  #   environment:
-  #     # 直接使用Portainer容器内的环境变量
-  #     TZ: ${TZ}
-  #   volumes:
-  #     - nfs_xiaogpt_config1:/config
-  #     - nfs_xiaogpt_src:/app/xiaogpt 
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.application == true
-  # xiaogpt2:
-  #   image: yihong0618/xiaogpt
-  #   command: --config=/config/config.json
-  #   networks: [network_cluster]
-  #   restart: on-failure
-  #   environment:
-  #     # 直接使用Portainer容器内的环境变量
-  #     TZ: ${TZ}
-  #   volumes:
-  #     - nfs_xiaogpt_config2:/config
-  #     - nfs_xiaogpt_src:/app/xiaogpt
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.application == true
-  # xiaogpt3:
-  #   image: yihong0618/xiaogpt
-  #   command: --config=/config/config.json
-  #   networks: [network_cluster]
-  #   restart: on-failure
-  #   environment:
-  #     # 直接使用Portainer容器内的环境变量
-  #     TZ: ${TZ}
-  #   volumes:
-  #     - nfs_xiaogpt_config3:/config
-  #     - nfs_xiaogpt_src:/app/xiaogpt
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.application == true                    
+  drpy2:
+    image: esme518/docker-drpy
+    networks: [network_cluster]
+    restart: on-failure
+    ports:
+      - 5705:5705
+      - 9001:9001
+    environment:
+      # user: root
+      # INET_USERNAME: ${DRPY_USERNAME}
+      # INET_PASSWORD: ${DRPY_PASSWORD}
+      TZ: ${TZ}       
+    # volumes:
+    #   - nfs_drpy:/root/sd/pywork/dr_py
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.drpy21.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.drpy21.entrypoints=websecure"
+        - "traefik.http.routers.drpy21.service=drpy1"
+        - "traefik.http.routers.drpy21.middlewares=noauth-chain@file"
+        - "traefik.http.services.drpy21.loadbalancer.server.port=9001"
+        - "traefik.http.routers.drpy22.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.drpy22.entrypoints=websecure"
+        - "traefik.http.routers.drpy22.service=drpy2"
+        - "traefik.http.routers.drpy22.middlewares=noauth-chain@file"
+        - "traefik.http.services.drpy22.loadbalancer.server.port=5705"
+        - homepage.group=Media
+        - homepage.name=Drpy2
+        - homepage.icon=python.png
+        - homepage.href=https://drpy2.${DOMAIN_SWARM}:4/admin/
+        - homepage.description=影音源管理       
+        - homepage.siteMonitor=http://drpy2:5705        
+        - homepage.weight=10          
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true                
 
 networks:
   network_cluster:
