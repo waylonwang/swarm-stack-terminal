@@ -152,7 +152,7 @@ services:
         - "traefik.http.routers.drpy22.service=drpy2"
         - "traefik.http.routers.drpy22.middlewares=noauth-chain@file"
         - "traefik.http.services.drpy22.loadbalancer.server.port=5705"
-        - homepage.group=Media
+        - homepage.group=Application
         - homepage.name=Drpy2
         - homepage.icon=python.png
         - homepage.href=https://drpy2.${DOMAIN_SWARM}:4/admin/
