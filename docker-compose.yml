@@ -126,7 +126,7 @@ services:
           - node.labels.download == true
 
   drpy2:
-    image: esme518/docker-drpy
+    image: hjdhnx/drpy
     networks: [network_cluster]
     restart: on-failure
     ports:
