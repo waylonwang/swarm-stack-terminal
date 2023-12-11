@@ -174,9 +174,6 @@ services:
       - 4567:4567
       - 5344:80
     environment:
-      # user: root
-      # INET_USERNAME: ${DRPY_USERNAME}
-      # INET_PASSWORD: ${DRPY_PASSWORD}
       ALIST_PORT: 5344
       TZ: ${TZ}       
     # volumes:
@@ -188,12 +185,12 @@ services:
         - "traefik.http.routers.tvbox.entrypoints=websecure"
         - "traefik.http.routers.tvbox.service=tvbox"
         - "traefik.http.routers.tvbox.middlewares=noauth-chain@file"
-        - "traefik.http.services.tvbox.loadbalancer.server.port=80"
+        - "traefik.http.services.tvbox.loadbalancer.server.port=4567"
         - "traefik.http.routers.tvbox2.rule=Host(`tvbox2.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.tvbox2.entrypoints=websecure"
         - "traefik.http.routers.tvbox2.service=tvbox2"
         - "traefik.http.routers.tvbox2.middlewares=noauth-chain@file"
-        - "traefik.http.services.tvbox2.loadbalancer.server.port=4567"
+        - "traefik.http.services.tvbox2.loadbalancer.server.port=5344"
         - homepage.group=Application
         - homepage.name=TVBox
         - homepage.icon=python.png
