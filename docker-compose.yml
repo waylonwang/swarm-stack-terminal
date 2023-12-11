@@ -172,9 +172,9 @@ services:
     restart: on-failure
     ports:
       - 4567:4567
-      - 5344:80
+      - 5244:80
     environment:
-      ALIST_PORT: 5344
+      ALIST_PORT: 5244
       TZ: ${TZ}       
     # volumes:
     #   - nfs_drpy:/root/sd/pywork/dr_py
@@ -190,7 +190,7 @@ services:
         - "traefik.http.routers.tvbox2.entrypoints=websecure"
         - "traefik.http.routers.tvbox2.service=tvbox2"
         - "traefik.http.routers.tvbox2.middlewares=noauth-chain@file"
-        - "traefik.http.services.tvbox2.loadbalancer.server.port=5344"
+        - "traefik.http.services.tvbox2.loadbalancer.server.port=5244"
         - homepage.group=Application
         - homepage.name=TVBox
         - homepage.icon=python.png
