@@ -142,16 +142,16 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.drpy21.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.drpy21.entrypoints=websecure"
-        - "traefik.http.routers.drpy21.service=drpy21"
-        - "traefik.http.routers.drpy21.middlewares=noauth-chain@file"
-        - "traefik.http.services.drpy21.loadbalancer.server.port=9001"
-        - "traefik.http.routers.drpy22.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.drpy22.entrypoints=websecure"
-        - "traefik.http.routers.drpy22.service=drpy22"
-        - "traefik.http.routers.drpy22.middlewares=noauth-chain@file"
-        - "traefik.http.services.drpy22.loadbalancer.server.port=5705"
+        - "traefik.http.routers.drpy2.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.drpy2.entrypoints=websecure"
+        - "traefik.http.routers.drpy2.service=drpy2"
+        - "traefik.http.routers.drpy2.middlewares=noauth-chain@file"
+        - "traefik.http.services.drpy2.loadbalancer.server.port=5705"
+        - "traefik.http.routers.drpys2.rule=Host(`drpys2.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.drpys2.entrypoints=websecure"
+        - "traefik.http.routers.drpys2.service=drpys2"
+        - "traefik.http.routers.drpys2.middlewares=noauth-chain@file"
+        - "traefik.http.services.drpys2.loadbalancer.server.port=9001"
         - homepage.group=Application
         - homepage.name=Drpy2
         - homepage.icon=python.png
