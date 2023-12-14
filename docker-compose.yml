@@ -113,7 +113,7 @@ services:
         - "traefik.http.services.baidupcs.loadbalancer.server.port=5299"
         - homepage.group=Application
         - homepage.name=BaiduPCS
-        - homepage.icon=baidu.png
+        - homepage.icon=https://www.waylon.wang:4/images/services/baidupan.png
         - homepage.href=https://baidupcs.${DOMAIN_SWARM}:4/
         - homepage.description=百度云盘下载器
         - homepage.siteMonitor=http://baidupcs:5299
@@ -132,13 +132,6 @@ services:
     ports:
       - 5705:5705
       - 9001:9001
-    environment:
-      # user: root
-      # INET_USERNAME: ${DRPY_USERNAME}
-      # INET_PASSWORD: ${DRPY_PASSWORD}
-      TZ: ${TZ}       
-    # volumes:
-    #   - nfs_drpy:/root/sd/pywork/dr_py
     deploy:
       labels:
         - "traefik.enable=true"
