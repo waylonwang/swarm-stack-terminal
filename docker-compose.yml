@@ -198,7 +198,59 @@ services:
           - node.labels.type == vm
           - node.labels.application == true                
 
-    
+  # RustDesk Server
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    networks: [network_cluster]
+    restart: on-failure    
+    ports:
+      - 21117:21117
+      - 21119:21119
+    volumes:
+      - nfs_rustdesk:/root
+    deploy:
+      labels:
+        - homepage.group=Application
+        - homepage.name=RustDesk Server
+        - homepage.icon=vnc.png
+        - homepage.description=RustDesk Server
+        - homepage.ping=hbbr
+        - homepage.weight=20
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true      
+
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs
+    networks: [network_cluster]
+    restart: on-failure
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21118:21118     
+    volumes:
+      - nfs_rustdesk:/root
+    deploy:
+      labels:
+        - homepage.group=Application
+        - homepage.name=RustDesk Server
+        - homepage.icon=vnc.png
+        - homepage.description=RustDesk Server
+        - homepage.ping=hbbs
+        - homepage.weight=20
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true     
+
 networks:
   network_cluster:
     external: true
@@ -257,23 +309,8 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${DOWNLOAD_DEVICE}/baidupcs
-  # nfs_xiaogpt_src:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/src/xiaogpt        
-  # nfs_xiaogpt_config1:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config1
-  # nfs_xiaogpt_config2:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config2
-  # nfs_xiaogpt_config3:
-  #   driver: local
-  #   driver_opts:
-  #     <<: *common-keys-volume
-  #     device: :${NFS_DEVICE}/application/ai/xiaogpt/config3         
+  nfs_rustdesk:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/rustdesk/data        
