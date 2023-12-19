@@ -229,7 +229,6 @@ services:
     networks: [network_cluster]
     restart: on-failure
     ports:
-      - 21114:21114
       - 21115:21115
       - 21116:21116
       - 21116:21116/udp
