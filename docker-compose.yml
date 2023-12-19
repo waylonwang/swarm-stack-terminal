@@ -147,7 +147,7 @@ services:
         - "traefik.http.services.drpys2.loadbalancer.server.port=9001"
         - homepage.group=Application
         - homepage.name=Drpy2
-        - homepage.icon=python.png
+        - homepage.icon=kamatera.png
         - homepage.href=https://drpy2.${DOMAIN_SWARM}:4/admin/
         - homepage.description=影音源管理       
         - homepage.siteMonitor=http://drpy2:5705        
@@ -186,7 +186,7 @@ services:
         - "traefik.http.services.tvbox2.loadbalancer.server.port=5244"
         - homepage.group=Application
         - homepage.name=TVBox
-        - homepage.icon=python.png
+        - homepage.icon=kamatera.png
         - homepage.href=https://tvbox.${DOMAIN_SWARM}:4
         - homepage.description=影音源管理       
         - homepage.siteMonitor=http://tvbox        
@@ -199,31 +199,6 @@ services:
           - node.labels.application == true                
 
   # RustDesk Server
-  # hbbr:
-  #   image: rustdesk/rustdesk-server:latest
-  #   command: hbbr
-  #   networks: [network_cluster]
-  #   restart: on-failure    
-  #   ports:
-  #     - 21117:21117
-  #     - 21119:21119
-  #   volumes:
-  #     - nfs_rustdesk:/root
-  #   deploy:
-  #     labels:
-  #       - homepage.group=Application
-  #       - homepage.name=RustDesk Server
-  #       - homepage.icon=vnc.png
-  #       - homepage.description=RustDesk Server
-  #       - homepage.ping=hbbr
-  #       - homepage.weight=20
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.application == true      
-
   rustdesk-server:
     image: rustdesk/rustdesk-server-s6:latest-amd64
     networks: [network_cluster]
@@ -241,7 +216,7 @@ services:
       labels:
         - homepage.group=Application
         - homepage.name=RustDesk Server
-        - homepage.icon=vnc.png
+        - homepage.icon=hyperion.png
         - homepage.description=RustDesk Server
         - homepage.ping=hbbs
         - homepage.weight=20
@@ -274,7 +249,7 @@ services:
         - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
         - homepage.group=Application
         - homepage.name=RustDesk API Server
-        - homepage.icon=restdesk.png
+        - homepage.icon=hyperion.png
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server
