@@ -186,7 +186,7 @@ services:
         - "traefik.http.services.tvbox2.loadbalancer.server.port=5244"
         - homepage.group=Application
         - homepage.name=TVBox
-        - homepage.icon=kamatera.png
+        - homepage.icon=truenas.png
         - homepage.href=https://tvbox.${DOMAIN_SWARM}:4
         - homepage.description=影音源管理       
         - homepage.siteMonitor=http://tvbox        
