@@ -237,7 +237,7 @@ services:
       - 21118:21118     
       - 21119:21119
     volumes:
-      - nfs_rustdesk:/root
+      - nfs_rustdesk_server:/root
     deploy:
       labels:
         - homepage.group=Application
@@ -252,6 +252,19 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true     
+
+  rustdesk-api-server:
+    image: ghcr.io/kingmo888/rustdesk-api-server:latest
+    networks: [network_cluster]
+    restart: on-failure    
+    ports:
+      - 21114:21114
+    environment:
+      HOST: 0.0.0.0
+      TZ: ${TZ} 
+      CSRF_TRUSTED_ORIGINS: http://ip.cloudvalley.name:21114 #修改CSRF_TRUSTED_ORIGINS为你的访问地址
+    volumes:
+      - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
 
 networks:
   network_cluster:
@@ -311,8 +324,13 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${DOWNLOAD_DEVICE}/baidupcs
-  nfs_rustdesk:
+  nfs_rustdesk_server:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/business/rustdesk/data        
+      device: :${NFS_DEVICE}/application/business/rustdesk/data      
+  nfs_rustdesk_api_db:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/rustdeskapi/db  
