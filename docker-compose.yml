@@ -259,14 +259,62 @@ services:
     ports:
       - 21114:21114
     environment:
-      # HOST: 0.0.0.0
-      # CSRF_TRUSTED_ORIGINS: "http://ip.cloudvalley.name:21114" #修改CSRF_TRUSTED_ORIGINS为你的访问地址
-      # TZ: ${TZ} 
-      - HOST=0.0.0.0
-      - TZ=Asia/Shanghai
-      - CSRF_TRUSTED_ORIGINS=http://ip.cloudvalley.name:21114 #修改CSRF_TRUSTED_ORIGINS为你的访问地址      
+      HOST: 0.0.0.0
+      CSRF_TRUSTED_ORIGINS: "http://ip.cloudvalley.name:21114" #修改CSRF_TRUSTED_ORIGINS为你的访问地址
+      TZ: ${TZ}   
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
+        - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
+        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
+        - homepage.group=Application
+        - homepage.name=RustDesk API Server
+        - homepage.icon=restdesk.png
+        - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
+        - homepage.description=RustDesk API Server
+        - homepage.siteMonitor=http://rustdesk-api-server
+        - homepage.weight=21
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true   
+
+  dockerui:
+    image: joinsunsoft/docker.ui:latest
+    networks: [network_cluster]
+    restart: on-failure    
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dockerui.rule=Host(`dockerui.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.dockerui.entrypoints=websecure"
+        - "traefik.http.routers.dockerui.service=dockerui"
+        - "traefik.http.routers.dockerui.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.dockerui.loadbalancer.server.port=8999"
+        - homepage.group=Application
+        - homepage.name=Docker UI
+        - homepage.icon=docker.png
+        - homepage.href=https://dockerui.${DOMAIN_SWARM}:4/
+        - homepage.description=Docker UI
+        - homepage.siteMonitor=http://dockerui
+        - homepage.weight=22
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true   
 
 networks:
   network_cluster:
