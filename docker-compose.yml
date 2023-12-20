@@ -235,7 +235,7 @@ services:
       - 21114:21114
     environment:
       HOST: 0.0.0.0
-      CSRF_TRUSTED_ORIGINS: "http://ip.cloudvalley.name:21114" #修改CSRF_TRUSTED_ORIGINS为你的访问地址
+      CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:4 #修改CSRF_TRUSTED_ORIGINS为你的访问地址
       TZ: ${TZ}   
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
