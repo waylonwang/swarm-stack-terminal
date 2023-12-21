@@ -266,7 +266,7 @@ services:
     networks: [network_cluster]
     restart: on-failure    
     environment:
-      PASSWORD: FLAME_PASSWORD
+      PASSWORD: ${FLAME_PASSWORD}
       TZ: ${TZ}   
     volumes:
       - nfs_flame_data:/app/data
