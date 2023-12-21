@@ -261,6 +261,37 @@ services:
           - node.labels.type == vm
           - node.labels.application == true   
 
+  flame:
+    image: pawelmalak/flame
+    networks: [network_cluster]
+    restart: on-failure    
+    environment:
+      PASSWORD: FLAME_PASSWORD
+      TZ: ${TZ}   
+    volumes:
+      - nfs_flame_data:/app/data
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.flame.rule=Host(`work.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.flame.entrypoints=websecure"
+        - "traefik.http.routers.flame.service=flame"
+        - "traefik.http.routers.flame.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.flame.loadbalancer.server.port=5005"
+        - homepage.group=Application
+        - homepage.name=Work StartPage
+        - homepage.icon=hyperion.png
+        - homepage.href=https://work.${DOMAIN_SWARM}:4/
+        - homepage.description=Work StartPage
+        - homepage.siteMonitor=http://flame:5005
+        - homepage.weight=21
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true   
+
 networks:
   network_cluster:
     external: true
@@ -329,3 +360,8 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/rustdeskapi/db  
+  nfs_flame_data:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/flame/data     
