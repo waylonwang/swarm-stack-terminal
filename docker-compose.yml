@@ -189,7 +189,7 @@ services:
         - homepage.icon=truenas.png
         - homepage.href=https://tvbox.${DOMAIN_SWARM}:4
         - homepage.description=影音源管理       
-        - homepage.siteMonitor=http://tvbox        
+        - homepage.siteMonitor=http://tvbox:5244
         - homepage.weight=10          
       mode: replicated
       replicas: 1
@@ -218,7 +218,7 @@ services:
         - homepage.name=RustDesk Server
         - homepage.icon=hyperion.png
         - homepage.description=RustDesk Server
-        - homepage.ping=hbbs
+        - homepage.ping=rustdesk-server
         - homepage.weight=20
       mode: replicated
       replicas: 1
@@ -252,7 +252,7 @@ services:
         - homepage.icon=hyperion.png
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
         - homepage.description=RustDesk API Server
-        - homepage.siteMonitor=http://rustdesk-api-server
+        - homepage.siteMonitor=http://rustdesk-api-server:21114
         - homepage.weight=21
       mode: replicated
       replicas: 1
