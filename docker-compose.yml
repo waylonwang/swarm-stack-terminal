@@ -189,7 +189,7 @@ services:
         - homepage.icon=truenas.png
         - homepage.href=https://tvbox.${DOMAIN_SWARM}:4
         - homepage.description=影音源管理       
-        - homepage.siteMonitor=http://tvbox:5244
+        - homepage.siteMonitor=http://tvbox:4567
         - homepage.weight=10          
       mode: replicated
       replicas: 1
