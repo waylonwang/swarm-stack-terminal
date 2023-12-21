@@ -253,7 +253,7 @@ services:
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
-        - homepage.weight=21
+        - homepage.weight=30
       mode: replicated
       replicas: 1
       placement:
@@ -284,13 +284,45 @@ services:
         - homepage.href=https://work.${DOMAIN_SWARM}:4/
         - homepage.description=Work StartPage
         - homepage.siteMonitor=http://flame:5005
-        - homepage.weight=21
+        - homepage.weight=31
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true   
+
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    networks: [network_cluster]
+    restart: on-failure        
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ} 
+    # volumes:
+    #   - /path/to/appdata/config:/config      
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.heimdall.rule=Host(`heimdall.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.heimdall.entrypoints=websecure"
+        - "traefik.http.routers.heimdall.service=heimdall"
+        - "traefik.http.routers.heimdall.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.heimdall.loadbalancer.server.port=80"
+        - homepage.group=Application
+        - homepage.name=heimdall
+        - homepage.icon=hyperion.png
+        - homepage.href=https://heimdall.${DOMAIN_SWARM}:4/
+        - homepage.description=heimdall
+        - homepage.siteMonitor=http://heimdall
+        - homepage.weight=21
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true  
 
 networks:
   network_cluster:
