@@ -420,8 +420,13 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/rustdeskapi/db  
+  nfs_flame_data:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/flame/data     
   nfs_startpage:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/business/startpage    
+      device: :${NFS_DEVICE}/application/business/startpage          
