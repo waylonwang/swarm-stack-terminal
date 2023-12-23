@@ -292,30 +292,28 @@ services:
           - node.labels.type == vm
           - node.labels.application == true   
 
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
+  dashmachine:
+    image: rmountjoy/dashmachine:latest
     networks: [network_cluster]
     restart: on-failure        
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: ${TZ} 
     # volumes:
     #   - /path/to/appdata/config:/config      
     deploy:      
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.heimdall.rule=Host(`heimdall.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.heimdall.entrypoints=websecure"
-        - "traefik.http.routers.heimdall.service=heimdall"
-        - "traefik.http.routers.heimdall.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.heimdall.loadbalancer.server.port=80"
+        - "traefik.http.routers.dashmachine.rule=Host(`dashmachine.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.dashmachine.entrypoints=websecure"
+        - "traefik.http.routers.dashmachine.service=dashmachine"
+        - "traefik.http.routers.dashmachine.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.dashmachine.loadbalancer.server.port=5000"
         - homepage.group=Application
-        - homepage.name=heimdall
+        - homepage.name=dashmachine
         - homepage.icon=hyperion.png
-        - homepage.href=https://heimdall.${DOMAIN_SWARM}:4/
-        - homepage.description=heimdall
-        - homepage.siteMonitor=http://heimdall
+        - homepage.href=https://dashmachine.${DOMAIN_SWARM}:4/
+        - homepage.description=dashmachine
+        - homepage.siteMonitor=http://dashmachine:5000
         - homepage.weight=21
       mode: replicated
       replicas: 1
