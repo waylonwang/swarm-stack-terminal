@@ -322,6 +322,36 @@ services:
           - node.labels.type == vm
           - node.labels.application == true  
 
+  startpage:
+    image: loganmarchione/docker-php-startpage:latest
+    networks: [network_cluster]
+    restart: on-failure        
+    environment:
+      TZ: ${TZ} 
+    # volumes:
+    #   - /path/to/appdata/config:/config      
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.startpage.rule=Host(`startpage.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.startpage.entrypoints=websecure"
+        - "traefik.http.routers.startpage.service=startpage"
+        - "traefik.http.routers.startpage.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.startpage.loadbalancer.server.port=80"
+        - homepage.group=Application
+        - homepage.name=startpage
+        - homepage.icon=hyperion.png
+        - homepage.href=https://startpage.${DOMAIN_SWARM}:4/
+        - homepage.description=startpage
+        - homepage.siteMonitor=http://startpage
+        - homepage.weight=21
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true            
+
 networks:
   network_cluster:
     external: true
