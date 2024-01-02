@@ -336,7 +336,7 @@ services:
         - "traefik.http.routers.startpage.rule=Host(`startpage.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.startpage.entrypoints=websecure"
         - "traefik.http.routers.startpage.service=startpage"
-        - "traefik.http.routers.startpage.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.routers.startpage.middlewares=cors-headers@file,auth-chain@file"
         - "traefik.http.services.startpage.loadbalancer.server.port=80"
         - homepage.group=Application
         - homepage.name=startpage
