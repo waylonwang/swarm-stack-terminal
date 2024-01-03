@@ -311,11 +311,11 @@ services:
         - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.terminal.entrypoints=websecure"
         - "traefik.http.routers.terminal.service=terminal"
-        - "traefik.http.routers.terminal.middlewares=cors-headers@file,auth-chain@file"
+        - "traefik.http.routers.terminal.middlewares=cors-headers@file,noauth-chain@file"
         - "traefik.http.services.terminal.loadbalancer.server.port=8088"
         - homepage.group=Application
         - homepage.name=Next Terminal
-        - homepage.icon=hoobs.png
+        - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
         - homepage.href=https://terminal.${DOMAIN_SWARM}:4/
         - homepage.description=堡垒机
         - homepage.siteMonitor=http://next-terminal
