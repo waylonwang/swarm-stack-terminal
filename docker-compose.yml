@@ -125,69 +125,6 @@ services:
           - node.labels.type == vm
           - node.labels.download == true            
 
-  # RustDesk Server
-  rustdesk-server:
-    image: rustdesk/rustdesk-server-s6:latest-amd64
-    networks: [network_cluster]
-    restart: on-failure
-    ports:
-      - 21115:21115
-      - 21116:21116
-      - 21116:21116/udp
-      - 21117:21117
-      - 21118:21118     
-      - 21119:21119
-    volumes:
-      - nfs_rustdesk_server:/root
-    deploy:
-      labels:
-        - homepage.group=Application
-        - homepage.name=RustDesk Server
-        - homepage.icon=hyperion.png
-        - homepage.description=RustDesk Server
-        - homepage.ping=rustdesk-server
-        - homepage.weight=31
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true     
-
-  rustdesk-api-server:
-    image: ghcr.io/kingmo888/rustdesk-api-server:latest
-    networks: [network_cluster]
-    restart: on-failure    
-    ports:
-      - 21114:21114
-    environment:
-      HOST: 0.0.0.0
-      CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:4 #修改CSRF_TRUSTED_ORIGINS为你的访问地址
-      TZ: ${TZ}   
-    volumes:
-      - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
-    deploy:      
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
-        - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
-        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
-        - homepage.group=Application
-        - homepage.name=RustDesk API Server
-        - homepage.icon=hyperion.png
-        - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
-        - homepage.description=RustDesk API Server
-        - homepage.siteMonitor=http://rustdesk-api-server:21114
-        - homepage.weight=30
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true   
-
   # flame:
   #   image: pawelmalak/flame
   #   networks: [network_cluster]
@@ -271,13 +208,125 @@ services:
         - homepage.href=https://startpage.${DOMAIN_SWARM}:4/
         - homepage.description=startpage
         - homepage.siteMonitor=http://startpage
-        - homepage.weight=40
+        - homepage.weight=30
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true            
+
+  # RustDesk Server
+  rustdesk-server:
+    image: rustdesk/rustdesk-server-s6:latest-amd64
+    networks: [network_cluster]
+    restart: on-failure
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21117:21117
+      - 21118:21118     
+      - 21119:21119
+    volumes:
+      - nfs_rustdesk_server:/root
+    deploy:
+      labels:
+        - homepage.group=Application
+        - homepage.name=RustDesk Server
+        - homepage.icon=hyperion.png
+        - homepage.description=RustDesk Server
+        - homepage.ping=rustdesk-server
+        - homepage.weight=40
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true     
+
+  rustdesk-api-server:
+    image: ghcr.io/kingmo888/rustdesk-api-server:latest
+    networks: [network_cluster]
+    restart: on-failure    
+    ports:
+      - 21114:21114
+    environment:
+      HOST: 0.0.0.0
+      CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:4 #修改CSRF_TRUSTED_ORIGINS为你的访问地址
+      TZ: ${TZ}   
+    volumes:
+      - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
+        - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
+        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
+        - homepage.group=Application
+        - homepage.name=RustDesk API Server
+        - homepage.icon=hyperion.png
+        - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
+        - homepage.description=RustDesk API Server
+        - homepage.siteMonitor=http://rustdesk-api-server:21114
+        - homepage.weight=41
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true   
+
+  # Next-Terminal
+  guacd:
+    image: dushixiang/guacd:latest
+    networks: [network_cluster]
+    restart: on-failure    
+    volumes:
+      - nfs_terminal_data:/usr/local/next-terminal/data
+    deploy:      
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true
+  next-terminal:
+    image: dushixiang/next-terminal:latest
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      DB: sqlite
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: 4822
+      TZ: ${TZ} 
+    volumes:
+      - nfs_terminal_data:/usr/local/next-terminal/data
+      - nfs_terminal_fonts:/usr/share/fonts 
+    deploy:      
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.terminal.entrypoints=websecure"
+        - "traefik.http.routers.terminal.service=terminal"
+        - "traefik.http.routers.terminal.middlewares=cors-headers@file,auth-chain@file"
+        - "traefik.http.services.terminal.loadbalancer.server.port=8088"
+        - homepage.group=Application
+        - homepage.name=Next Terminal
+        - homepage.icon=hoobs.png
+        - homepage.href=https://terminal.${DOMAIN_SWARM}:4/
+        - homepage.description=堡垒机
+        - homepage.siteMonitor=http://next-terminal
+        - homepage.weight=42
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true 
+
 
 networks:
   network_cluster:
@@ -336,17 +385,7 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${DOWNLOAD_DEVICE}/baidupcs
-  nfs_rustdesk_server:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/business/rustdesk/data      
-  nfs_rustdesk_api_db:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/business/rustdeskapi/db  
+      device: :${DOWNLOAD_DEVICE}/baidupcs         
   # nfs_flame_data:
   #   driver: local
   #   driver_opts:
@@ -357,3 +396,23 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/startpage          
+  nfs_rustdesk_server:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/monitor/rustdesk/data   
+  nfs_rustdesk_api_db:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/monitor/rustdeskapi/db  
+  nfs_terminal_data:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/monitor/next-terminal/data         
+  nfs_terminal_fonts:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/monitor/next-terminal/fonts         
