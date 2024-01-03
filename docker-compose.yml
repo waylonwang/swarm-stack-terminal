@@ -123,80 +123,7 @@ services:
       placement:
         constraints:
           - node.labels.type == vm
-          - node.labels.download == true
-
-  drpy2:
-    image: esme518/docker-drpy
-    networks: [network_cluster]
-    restart: on-failure
-    ports:
-      - 5705:5705
-      - 9001:9001
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.drpy2.rule=Host(`drpy2.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.drpy2.entrypoints=websecure"
-        - "traefik.http.routers.drpy2.service=drpy2"
-        - "traefik.http.routers.drpy2.middlewares=noauth-chain@file"
-        - "traefik.http.services.drpy2.loadbalancer.server.port=5705"
-        - "traefik.http.routers.drpys2.rule=Host(`drpys2.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.drpys2.entrypoints=websecure"
-        - "traefik.http.routers.drpys2.service=drpys2"
-        - "traefik.http.routers.drpys2.middlewares=noauth-chain@file"
-        - "traefik.http.services.drpys2.loadbalancer.server.port=9001"
-        - homepage.group=Application
-        - homepage.name=Drpy2
-        - homepage.icon=kamatera.png
-        - homepage.href=https://drpy2.${DOMAIN_SWARM}:4/admin/
-        - homepage.description=影音源管理       
-        - homepage.siteMonitor=http://drpy2:5705        
-        - homepage.weight=10          
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true                
-
-  tvbox:
-    image: haroldli/xiaoya-tvbox:latest
-    networks: [network_cluster]
-    restart: on-failure
-    ports:
-      - 4567:4567
-      - 5244:80
-    environment:
-      ALIST_PORT: 5244
-      TZ: ${TZ}       
-    # volumes:
-    #   - nfs_drpy:/root/sd/pywork/dr_py
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.tvbox.rule=Host(`tvbox.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.tvbox.entrypoints=websecure"
-        - "traefik.http.routers.tvbox.service=tvbox"
-        - "traefik.http.routers.tvbox.middlewares=noauth-chain@file"
-        - "traefik.http.services.tvbox.loadbalancer.server.port=4567"
-        - "traefik.http.routers.tvbox2.rule=Host(`tvbox2.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.tvbox2.entrypoints=websecure"
-        - "traefik.http.routers.tvbox2.service=tvbox2"
-        - "traefik.http.routers.tvbox2.middlewares=noauth-chain@file"
-        - "traefik.http.services.tvbox2.loadbalancer.server.port=5244"
-        - homepage.group=Application
-        - homepage.name=TVBox
-        - homepage.icon=truenas.png
-        - homepage.href=https://tvbox.${DOMAIN_SWARM}:4
-        - homepage.description=影音源管理       
-        - homepage.siteMonitor=http://tvbox:4567
-        - homepage.weight=10          
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true                
+          - node.labels.download == true            
 
   # RustDesk Server
   rustdesk-server:
@@ -261,66 +188,66 @@ services:
           - node.labels.type == vm
           - node.labels.application == true   
 
-  flame:
-    image: pawelmalak/flame
-    networks: [network_cluster]
-    restart: on-failure    
-    environment:
-      PASSWORD: ${FLAME_PASSWORD}
-      TZ: ${TZ}   
-    volumes:
-      - nfs_flame_data:/app/data
-    deploy:      
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.flame.rule=Host(`work.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.flame.entrypoints=websecure"
-        - "traefik.http.routers.flame.service=flame"
-        - "traefik.http.routers.flame.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.flame.loadbalancer.server.port=5005"
-        - homepage.group=Application
-        - homepage.name=Work StartPage
-        - homepage.icon=hyperion.png
-        - homepage.href=https://work.${DOMAIN_SWARM}:4/
-        - homepage.description=Work StartPage
-        - homepage.siteMonitor=http://flame:5005
-        - homepage.weight=31
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true   
+  # flame:
+  #   image: pawelmalak/flame
+  #   networks: [network_cluster]
+  #   restart: on-failure    
+  #   environment:
+  #     PASSWORD: ${FLAME_PASSWORD}
+  #     TZ: ${TZ}   
+  #   volumes:
+  #     - nfs_flame_data:/app/data
+  #   deploy:      
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.routers.flame.rule=Host(`work.${DOMAIN_SWARM}`)"
+  #       - "traefik.http.routers.flame.entrypoints=websecure"
+  #       - "traefik.http.routers.flame.service=flame"
+  #       - "traefik.http.routers.flame.middlewares=cors-headers@file,noauth-chain@file"
+  #       - "traefik.http.services.flame.loadbalancer.server.port=5005"
+  #       - homepage.group=Application
+  #       - homepage.name=Work StartPage
+  #       - homepage.icon=hyperion.png
+  #       - homepage.href=https://work.${DOMAIN_SWARM}:4/
+  #       - homepage.description=Work StartPage
+  #       - homepage.siteMonitor=http://flame:5005
+  #       - homepage.weight=31
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.application == true   
 
-  dashmachine:
-    image: rmountjoy/dashmachine:latest
-    networks: [network_cluster]
-    restart: on-failure        
-    environment:
-      TZ: ${TZ} 
-    # volumes:
-    #   - /path/to/appdata/config:/config      
-    deploy:      
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.dashmachine.rule=Host(`dashmachine.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.dashmachine.entrypoints=websecure"
-        - "traefik.http.routers.dashmachine.service=dashmachine"
-        - "traefik.http.routers.dashmachine.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.dashmachine.loadbalancer.server.port=5000"
-        - homepage.group=Application
-        - homepage.name=dashmachine
-        - homepage.icon=hyperion.png
-        - homepage.href=https://dashmachine.${DOMAIN_SWARM}:4/
-        - homepage.description=dashmachine
-        - homepage.siteMonitor=http://dashmachine:5000
-        - homepage.weight=21
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true  
+  # dashmachine:
+  #   image: rmountjoy/dashmachine:latest
+  #   networks: [network_cluster]
+  #   restart: on-failure        
+  #   environment:
+  #     TZ: ${TZ} 
+  #   # volumes:
+  #   #   - /path/to/appdata/config:/config      
+  #   deploy:      
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.routers.dashmachine.rule=Host(`dashmachine.${DOMAIN_SWARM}`)"
+  #       - "traefik.http.routers.dashmachine.entrypoints=websecure"
+  #       - "traefik.http.routers.dashmachine.service=dashmachine"
+  #       - "traefik.http.routers.dashmachine.middlewares=cors-headers@file,noauth-chain@file"
+  #       - "traefik.http.services.dashmachine.loadbalancer.server.port=5000"
+  #       - homepage.group=Application
+  #       - homepage.name=dashmachine
+  #       - homepage.icon=hyperion.png
+  #       - homepage.href=https://dashmachine.${DOMAIN_SWARM}:4/
+  #       - homepage.description=dashmachine
+  #       - homepage.siteMonitor=http://dashmachine:5000
+  #       - homepage.weight=21
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.application == true  
 
   startpage:
     image: loganmarchione/docker-php-startpage:latest
@@ -340,7 +267,7 @@ services:
         - "traefik.http.services.startpage.loadbalancer.server.port=80"
         - homepage.group=Application
         - homepage.name=startpage
-        - homepage.icon=hyperion.png
+        - homepage.icon=hoobs.png
         - homepage.href=https://startpage.${DOMAIN_SWARM}:4/
         - homepage.description=startpage
         - homepage.siteMonitor=http://startpage
@@ -420,11 +347,11 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/rustdeskapi/db  
-  nfs_flame_data:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/business/flame/data     
+  # nfs_flame_data:
+  #   driver: local
+  #   driver_opts:
+  #     <<: *common-keys-volume
+  #     device: :${NFS_DEVICE}/application/business/flame/data     
   nfs_startpage:
     driver: local
     driver_opts:
