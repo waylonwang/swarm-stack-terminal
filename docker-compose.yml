@@ -318,7 +318,7 @@ services:
         - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
         - homepage.href=https://terminal.${DOMAIN_SWARM}:4/
         - homepage.description=堡垒机
-        - homepage.siteMonitor=http://next-terminal
+        - homepage.siteMonitor=http://next-terminal:8088
         - homepage.weight=42
       mode: replicated
       replicas: 1
