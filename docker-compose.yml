@@ -41,6 +41,39 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true
+  # NocoBase
+  nocodb:
+    image: nocodb/nocodb:lates
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      NC_DB: ${NC_DB}
+      NC_PUBLIC_URL: https://nocodb.${DOMAIN_SWARM}:4
+      TZ: ${TZ}
+    volumes:
+      - nfs_nocodb:/usr/app/data
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nocodb.rule=Host(`nocodb.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.nocodb.entrypoints=websecure"
+        - "traefik.http.routers.nocodb.service=nocodb"
+        - "traefik.http.routers.nocodb.middlewares=noauth-chain@file"
+        - "traefik.http.services.nocodb.loadbalancer.server.port=8080"
+        - homepage.group=Application
+        - homepage.name=NocoDB
+        - homepage.icon=https://www.waylon.wang:4/images/services/nocobase.png
+        - homepage.href=https://nocodb.${DOMAIN_SWARM}:4/dashboard
+        - homepage.description=NocoDB
+        - homepage.siteMonitor=http://nocodb
+        - homepage.weight=11
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true
 
   # Transmission
   transmission:
@@ -351,6 +384,11 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/nocobase/storage
+  nfs_nocodb:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/nocodb/data
   nfs_transmission_config:
     driver: local
     driver_opts:
