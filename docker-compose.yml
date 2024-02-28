@@ -60,13 +60,13 @@ services:
         - "traefik.http.routers.nocodb.rule=Host(`nocodb.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.nocodb.entrypoints=websecure"
         - "traefik.http.routers.nocodb.service=nocodb"
-        - "traefik.http.routers.nocodb.middlewares=hugereq-noauth-chain@file"
+        - "traefik.http.routers.nocodb.middlewares=noauth-chain@file"
         - "traefik.http.services.nocodb.loadbalancer.server.port=8080"
         - homepage.group=Application
         - homepage.name=NocoDB
         - homepage.icon=https://www.waylon.wang:4/images/services/nocobase.png
         - homepage.href=https://nocodb.${DOMAIN_SWARM}:4/dashboard
-        - homepage.description=NocoDB
+        - homepage.description=NocoDB多维表格
         - homepage.siteMonitor=http://nocodb
         - homepage.weight=11
       mode: replicated
