@@ -43,7 +43,7 @@ services:
           - node.labels.application == true
   # NocoBase
   nocodb:
-    image: nocodb/nocodb:lates
+    image: nocodb/nocodb:latest
     networks: [network_cluster]
     restart: on-failure
     environment:
