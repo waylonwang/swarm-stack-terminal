@@ -41,7 +41,8 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true
-  # NocoBase
+
+  # NocoDB
   nocodb:
     image: nocodb/nocodb:latest
     networks: [network_cluster]
@@ -59,7 +60,7 @@ services:
         - "traefik.http.routers.nocodb.rule=Host(`nocodb.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.nocodb.entrypoints=websecure"
         - "traefik.http.routers.nocodb.service=nocodb"
-        - "traefik.http.routers.nocodb.middlewares=noauth-chain@file"
+        - "traefik.http.routers.nocodb.middlewares=hugereq-auth-chain@file"
         - "traefik.http.services.nocodb.loadbalancer.server.port=8080"
         - homepage.group=Application
         - homepage.name=NocoDB
