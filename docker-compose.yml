@@ -123,41 +123,73 @@ services:
           - node.labels.type == vm
           - node.labels.download == true
 
-  # BaiduPCS
-  baidupcs:
-    image: oldiy/baidupcs:latest
+  # IYUU
+  iyuu:
+    image: iyuucn/iyuuplus:latest
     networks: [network_cluster]
     restart: on-failure  
     environment:
       # 直接使用Portainer容器内的环境变量
-      PUID: ${TR_PUID}
-      PGID: ${TR_PGID}
-      TZ: ${TZ}    
+      TZ: ${TZ}
     volumes:
-      - nfs_baidupcs_config:/root/.config/BaiduPCS-Go
-      - nfs_baidupcs_client:/opt/BaiduPCS
-      - nfs_baidupcs_download:/root/Downloads
+      - nfs_iyuu_db:/IYUU/db
+      - nfs_iyuu_tr:/tr
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.baidupcs.rule=Host(`baidupcs.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.baidupcs.entrypoints=websecure"
-        - "traefik.http.routers.baidupcs.service=baidupcs"
-        - "traefik.http.routers.baidupcs.middlewares=noauth-chain@file"
-        - "traefik.http.services.baidupcs.loadbalancer.server.port=5299"
+        - "traefik.http.routers.iyuu.rule=Host(`iyuu.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.iyuu.entrypoints=websecure"
+        - "traefik.http.routers.iyuu.service=iyuu"
+        - "traefik.http.routers.iyuu.middlewares=noauth-chain@file"
+        - "traefik.http.services.iyuu.loadbalancer.server.port=9091"  
         - homepage.group=Application
-        - homepage.name=BaiduPCS
-        - homepage.icon=https://www.waylon.wang:4/images/services/baidupan.png
-        - homepage.href=https://baidupcs.${DOMAIN_SWARM}:4/
-        - homepage.description=百度云盘下载器
-        - homepage.siteMonitor=http://baidupcs:5299
-        - homepage.weight=21        
+        - homepage.name=IYUU
+        - homepage.icon=transmission.png
+        - homepage.href=https://iyuu.${DOMAIN_SWARM}:4/
+        - homepage.description=PT辅种
+        - homepage.ping=http://transmission:8787
+        - homepage.weight=21
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.labels.type == vm
-          - node.labels.download == true            
+          - node.labels.download == true
+  # BaiduPCS
+  # baidupcs:
+  #   image: oldiy/baidupcs:latest
+  #   networks: [network_cluster]
+  #   restart: on-failure  
+  #   environment:
+  #     # 直接使用Portainer容器内的环境变量
+  #     PUID: ${TR_PUID}
+  #     PGID: ${TR_PGID}
+  #     TZ: ${TZ}    
+  #   volumes:
+  #     - nfs_baidupcs_config:/root/.config/BaiduPCS-Go
+  #     - nfs_baidupcs_client:/opt/BaiduPCS
+  #     - nfs_baidupcs_download:/root/Downloads
+  #   deploy:
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.routers.baidupcs.rule=Host(`baidupcs.${DOMAIN_SWARM}`)"
+  #       - "traefik.http.routers.baidupcs.entrypoints=websecure"
+  #       - "traefik.http.routers.baidupcs.service=baidupcs"
+  #       - "traefik.http.routers.baidupcs.middlewares=noauth-chain@file"
+  #       - "traefik.http.services.baidupcs.loadbalancer.server.port=5299"
+  #       - homepage.group=Application
+  #       - homepage.name=BaiduPCS
+  #       - homepage.icon=https://www.waylon.wang:4/images/services/baidupan.png
+  #       - homepage.href=https://baidupcs.${DOMAIN_SWARM}:4/
+  #       - homepage.description=百度云盘下载器
+  #       - homepage.siteMonitor=http://baidupcs:5299
+  #       - homepage.weight=21        
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.download == true            
 
   # flame:
   #   image: pawelmalak/flame
@@ -409,7 +441,17 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-media-main-volume
-      device: :${MEDIA_DEVICE}/watch        
+      device: :${MEDIA_DEVICE}/watch    
+  nfs_iyuu_db:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/iyuu/db   
+  nfs_iyuu_tr:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/transmission/config/torrents            
   nfs_baidupcs_client:
     driver: local
     driver_opts:
