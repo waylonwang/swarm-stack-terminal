@@ -141,7 +141,7 @@ services:
         - "traefik.http.routers.iyuu.entrypoints=websecure"
         - "traefik.http.routers.iyuu.service=iyuu"
         - "traefik.http.routers.iyuu.middlewares=noauth-chain@file"
-        - "traefik.http.services.iyuu.loadbalancer.server.port=9091"  
+        - "traefik.http.services.iyuu.loadbalancer.server.port=8787"  
         - homepage.group=Application
         - homepage.name=IYUU
         - homepage.icon=transmission.png
