@@ -130,8 +130,8 @@ services:
     restart: on-failure  
     environment:
       # 直接使用Portainer容器内的环境变量
-      PUID: ${TR_PUID}
-      PGID: ${TR_PGID}
+      PUID: ${QB_PUID}
+      PGID: ${QB_PGID}
       # UMASK_SET: 022    # （可选）默认022
       # WEBUI_PORT: 4  # WEB UI 端口 
       TZ: ${TZ}
@@ -158,10 +158,10 @@ services:
         - homepage.description=PT下载器
         - homepage.ping=http://qbittorrent:8080
         - homepage.weight=21
-        # - homepage.widget.type=qbittorrent
-        # - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
-        # - homepage.widget.username=${TR_USERNAME}
-        # - homepage.widget.password=${TR_PASSWORD}
+        - homepage.widget.type=qbittorrent
+        - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
+        - homepage.widget.username=${QB_USERNAME}
+        - homepage.widget.password=${QB_PASSWORD}
       mode: replicated
       replicas: 1
       placement:
