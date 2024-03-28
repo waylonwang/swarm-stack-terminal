@@ -128,6 +128,13 @@ services:
     image: linuxserver/qbittorrent
     networks: [network_cluster]
     restart: on-failure  
+    ports:
+      - target: 6881
+        published: 6881
+        protocol: tcp
+      - target: 6881
+        published: 6881
+        protocol: udp    
     environment:
       # 直接使用Portainer容器内的环境变量
       PUID: ${TR_PUID}
@@ -147,10 +154,10 @@ services:
         - "traefik.http.routers.qbittorrent.service=qbittorrent"
         - "traefik.http.routers.qbittorrent.middlewares=noauth-chain@file"
         - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
-        - "traefik.tcp.routers.qb_pt.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.qb_pt.entrypoints=qb_pt"
-        - "traefik.tcp.routers.qb_pt.service=qb_pt"
-        - "traefik.tcp.services.qb_pt.loadbalancer.server.port=6881"   
+        # - "traefik.tcp.routers.qb_pt.rule=HostSNI(`*`)"
+        # - "traefik.tcp.routers.qb_pt.entrypoints=qb_pt"
+        # - "traefik.tcp.routers.qb_pt.service=qb_pt"
+        # - "traefik.tcp.services.qb_pt.loadbalancer.server.port=6881"   
         - homepage.group=Application
         - homepage.name=Qbittorrent
         - homepage.icon=qbittorrent.png
