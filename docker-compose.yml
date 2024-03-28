@@ -137,7 +137,6 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_qbittorrent_config:/config
-      - nfs_qbittorrent_downloads:/downloads
       - nfs_qbittorrent_main_downloads:/media
       - nfs_qbittorrent_ext_downloads:/media_ext
     deploy:
@@ -490,11 +489,6 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/download/qbittorrent/config
-  nfs_qbittorrent_downloads:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/download/qbittorrent/downloads
   nfs_qbittorrent_main_downloads:
     driver: local
     driver_opts:
