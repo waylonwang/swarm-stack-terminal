@@ -128,13 +128,6 @@ services:
     image: linuxserver/qbittorrent
     networks: [network_cluster]
     restart: on-failure  
-    ports:
-      - target: 6881
-        published: 6881
-        protocol: tcp
-      - target: 6881
-        published: 6881
-        protocol: udp    
     environment:
       # 直接使用Portainer容器内的环境变量
       PUID: ${TR_PUID}
