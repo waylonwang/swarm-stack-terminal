@@ -147,6 +147,10 @@ services:
         - "traefik.http.routers.qbittorrent.service=qbittorrent"
         - "traefik.http.routers.qbittorrent.middlewares=noauth-chain@file"
         - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+        - "traefik.tcp.routers.qb_pt.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.qb_pt.entrypoints=qb_pt"
+        - "traefik.tcp.routers.qb_pt.service=qb_pt"
+        - "traefik.tcp.services.qb_pt.loadbalancer.server.port=6881"   
         - homepage.group=Application
         - homepage.name=Qbittorrent
         - homepage.icon=qbittorrent.png
