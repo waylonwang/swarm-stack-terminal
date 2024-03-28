@@ -123,38 +123,81 @@ services:
           - node.labels.type == vm
           - node.labels.download == true
 
-  # IYUU
-  iyuu:
-    image: iyuucn/iyuuplus:latest
+  # Qbittorrent
+  qbittorrent:
+    image: linuxserver/qbittorrent
     networks: [network_cluster]
     restart: on-failure  
     environment:
       # 直接使用Portainer容器内的环境变量
+      PUID: ${TR_PUID}
+      PGID: ${TR_PGID}
+      # UMASK_SET: 022    # （可选）默认022
+      # WEBUI_PORT: 8081  # WEB UI 端口 
       TZ: ${TZ}
     volumes:
-      - nfs_iyuu_src:/IYUU
-      - nfs_iyuu_tr:/tr
+      - nfs_qbittorrent_config:/config
+      - nfs_qbittorrent_downloads:/downloads
+      - nfs_qbittorrent_main_downloads:/media
+      - nfs_qbittorrent_ext_downloads:/media_ext
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.iyuu.rule=Host(`iyuu.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.iyuu.entrypoints=websecure"
-        - "traefik.http.routers.iyuu.service=iyuu"
-        - "traefik.http.routers.iyuu.middlewares=noauth-chain@file"
-        - "traefik.http.services.iyuu.loadbalancer.server.port=8787"  
+        - "traefik.http.routers.qbittorrent.rule=Host(`qb.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+        - "traefik.http.routers.qbittorrent.service=qbittorrent"
+        - "traefik.http.routers.qbittorrent.middlewares=noauth-chain@file"
+        - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
         - homepage.group=Application
-        - homepage.name=IYUU
-        - homepage.icon=transmission.png
-        - homepage.href=https://iyuu.${DOMAIN_SWARM}:4/
-        - homepage.description=PT辅种
-        - homepage.ping=http://transmission:8787
+        - homepage.name=Qbittorrent
+        - homepage.icon=qbittorrent.png
+        - homepage.href=https://qb.${DOMAIN_SWARM}:4/
+        - homepage.description=PT下载器
+        - homepage.ping=http://qbittorrent:8080
         - homepage.weight=21
+        # - homepage.widget.type=qbittorrent
+        # - homepage.widget.url=https://pt.${DOMAIN_SWARM}:4    
+        # - homepage.widget.username=${TR_USERNAME}
+        # - homepage.widget.password=${TR_PASSWORD}
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.labels.type == vm
           - node.labels.download == true
+
+  # IYUU
+  # iyuu:
+  #   image: iyuucn/iyuuplus:latest
+  #   networks: [network_cluster]
+  #   restart: on-failure  
+  #   environment:
+  #     # 直接使用Portainer容器内的环境变量
+  #     TZ: ${TZ}
+  #   volumes:
+  #     - nfs_iyuu_src:/IYUU
+  #     - nfs_iyuu_tr:/tr
+  #   deploy:
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.routers.iyuu.rule=Host(`iyuu.${DOMAIN_SWARM}`)"
+  #       - "traefik.http.routers.iyuu.entrypoints=websecure"
+  #       - "traefik.http.routers.iyuu.service=iyuu"
+  #       - "traefik.http.routers.iyuu.middlewares=noauth-chain@file"
+  #       - "traefik.http.services.iyuu.loadbalancer.server.port=8787"  
+  #       - homepage.group=Application
+  #       - homepage.name=IYUU
+  #       - homepage.icon=transmission.png
+  #       - homepage.href=https://iyuu.${DOMAIN_SWARM}:4/
+  #       - homepage.description=PT辅种
+  #       - homepage.ping=http://transmission:8787
+  #       - homepage.weight=21
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.download == true
   # BaiduPCS
   # baidupcs:
   #   image: oldiy/baidupcs:latest
@@ -442,6 +485,26 @@ volumes:
     driver_opts:
       <<: *common-media-main-volume
       device: :${MEDIA_DEVICE}/watch    
+  nfs_qbittorrent_config:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/qbittorrent/config
+  nfs_qbittorrent_downloads:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/download/qbittorrent/downloads
+  nfs_qbittorrent_main_downloads:
+    driver: local
+    driver_opts:
+      <<: *common-media-main-volume
+      device: :${MEDIA_DEVICE}   
+  nfs_qbittorrent_ext_downloads:
+    driver: local
+    driver_opts:
+      <<: *common-media-ext-volume
+      device: :${MEDIA_DEVICE}       
   nfs_iyuu_src:
     driver: local
     driver_opts:
