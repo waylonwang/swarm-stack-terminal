@@ -133,7 +133,7 @@ services:
       PUID: ${TR_PUID}
       PGID: ${TR_PGID}
       # UMASK_SET: 022    # （可选）默认022
-      WEBUI_PORT: 4  # WEB UI 端口 
+      # WEBUI_PORT: 4  # WEB UI 端口 
       TZ: ${TZ}
     volumes:
       - nfs_qbittorrent_config:/config
@@ -147,11 +147,7 @@ services:
         - "traefik.http.routers.qbittorrent.entrypoints=websecure"
         - "traefik.http.routers.qbittorrent.service=qbittorrent"
         - "traefik.http.routers.qbittorrent.middlewares=noauth-chain@file"
-        # - "traefik.http.middlewares.qb-headers.headers.customrequestheaders.X-Frame-Options=SAMEORIGIN"
-        # - "traefik.http.middlewares.qb-headers.headers.customrequestheaders.Referer="
-        # - "traefik.http.middlewares.qb-headers.headers.customrequestheaders.Origin="
-        # - "traefik.http.routers.qbittorrent.middlewares=qb-headers"
-        - "traefik.http.services.qbittorrent.loadbalancer.server.port=4"
+        - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
         - homepage.group=Application
         - homepage.name=Qbittorrent
         - homepage.icon=qbittorrent.png
