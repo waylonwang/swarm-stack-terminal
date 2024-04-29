@@ -23,7 +23,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.nocobase.rule=Host(`nocobase.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.nocobase.rule=Host(`nocobase.${DOMAIN_SWARM}`,`nocobase.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.nocobase.entrypoints=websecure"
         - "traefik.http.routers.nocobase.service=nocobase"
         - "traefik.http.routers.nocobase.middlewares=cors-headers@file,noauth-chain@file"
@@ -57,7 +57,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.nocodb.rule=Host(`nocodb.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.nocodb.rule=Host(`nocodb.${DOMAIN_SWARM}`,`nocodb.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.nocodb.entrypoints=websecure"
         - "traefik.http.routers.nocodb.service=nocodb"
         - "traefik.http.routers.nocodb.middlewares=noauth-chain@file"
@@ -96,7 +96,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.transmission.rule=Host(`pt.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.transmission.rule=Host(`pt.${DOMAIN_SWARM}`,`pt.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.transmission.entrypoints=websecure"
         - "traefik.http.routers.transmission.service=transmission"
         - "traefik.http.routers.transmission.middlewares=noauth-chain@file"
@@ -142,7 +142,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.qbittorrent.rule=Host(`qb.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.qbittorrent.rule=Host(`qb.${DOMAIN_SWARM}`,`qb.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.qbittorrent.entrypoints=websecure"
         - "traefik.http.routers.qbittorrent.service=qbittorrent"
         - "traefik.http.routers.qbittorrent.middlewares=noauth-chain@file"
@@ -309,7 +309,7 @@ services:
     deploy:      
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.startpage.rule=Host(`startpage.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.startpage.rule=Host(`startpage.${DOMAIN_SWARM}`,`startpage.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.startpage.entrypoints=websecure"
         - "traefik.http.routers.startpage.service=startpage"
         - "traefik.http.routers.startpage.middlewares=cors-headers@file,auth-chain@file"
@@ -372,7 +372,7 @@ services:
     deploy:      
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`,`rustdeskapi.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
         - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
         - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,noauth-chain@file"
@@ -420,7 +420,7 @@ services:
     deploy:      
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`,`terminal.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.terminal.entrypoints=websecure"
         - "traefik.http.routers.terminal.service=terminal"
         - "traefik.http.routers.terminal.middlewares=cors-headers@file,noauth-chain@file"
