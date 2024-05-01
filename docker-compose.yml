@@ -358,7 +358,7 @@ services:
           - node.labels.application == true     
 
   rustdesk-api-server:
-    image: ghcr.io/kingmo888/rustdesk-api-server:latest
+    image: ghcr.nju.edu.cn/kingmo888/rustdesk-api-server:latest
     networks: [network_cluster]
     restart: on-failure    
     ports:
