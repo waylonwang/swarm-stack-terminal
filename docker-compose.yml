@@ -76,6 +76,38 @@ services:
           - node.labels.type == vm
           - node.labels.application == true
 
+  # Draw.io
+  drawio:
+    image: jgraph/drawio:latest
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      TZ: ${TZ}
+    volumes:
+      - nfs_drawio:/usr/local/tomcat/webapps/draw/js
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.drawio.rule=Host(`drawio.${DOMAIN_SWARM}`,`drawio.${DOMAIN_EMERGENCY}`)"
+        - "traefik.http.routers.drawio.entrypoints=websecure"
+        - "traefik.http.routers.drawio.service=drawio"
+        - "traefik.http.routers.drawio.middlewares=noauth-chain@file"
+        - "traefik.http.services.drawio.loadbalancer.server.port=8080"
+        - homepage.group=Application
+        - homepage.name=Draw.io
+        - homepage.icon=drawio.png
+        - homepage.href=https://drawio.${DOMAIN_SWARM}:4
+        - homepage.description=Draw.io绘图
+        - homepage.siteMonitor=http://drawio:8080
+        - homepage.weight=12
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true          
+
   # Transmission
   transmission:
     image: chisbread/transmission:latest
@@ -468,6 +500,11 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/business/nocodb/data
+  nfs_drawio:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/application/business/drawio/data      
   nfs_transmission_config:
     driver: local
     driver_opts:
