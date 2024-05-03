@@ -4,8 +4,8 @@ version: "3.4"
 services:
   # NocoBase
   nocobase:
-    # image: nocobase/nocobase:0.21.0-alpha.16
-    image: nocobase/nocobase:main
+    image: nocobase/nocobase:0.21.0-alpha.16
+    # image: nocobase/nocobase:main
     networks: [network_cluster]
     restart: on-failure
     environment:
