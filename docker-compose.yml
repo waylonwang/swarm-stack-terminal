@@ -131,7 +131,7 @@ services:
         - traefik.http.routers.ssh.service=ssh
         - traefik.http.routers.ssh.middlewares=noauth-chain@file
         - traefik.http.services.ssh.loadbalancer.server.port=8182
-        - homepage.group=Metrics & Monitor
+        - homepage.group=Application
         - homepage.name=Sshwifty
         - homepage.icon=terminal.png
         - homepage.href=https://ssh.${DOMAIN_SWARM}:4/
