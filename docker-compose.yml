@@ -20,7 +20,7 @@ services:
       labels:
         - homepage.group=Application
         - homepage.name=RustDesk Server
-        - homepage.icon=hyperion.png
+        - homepage.icon=rustdesk.png
         - homepage.description=RustDesk Server
         - homepage.ping=rustdesk-server
         - homepage.weight=40
