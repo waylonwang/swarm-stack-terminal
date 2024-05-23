@@ -53,7 +53,7 @@ services:
         - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
         - homepage.group=Application
         - homepage.name=RustDesk API Server
-        - homepage.icon=hyperion.png
+        - homepage.icon=rustdesk.png
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
@@ -112,6 +112,40 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true 
+
+  # Sshwifty
+  sshwifty:
+    image: niruix/sshwifty:latest
+    networks: [network_cluster]
+    restart: on-failure    
+    environment:
+      SSHWIFTY_CONFIG: /config/sshwifty.conf.json
+    #   - SSHWIFTY_SHAREDKEY=WEB_ACCESS_PASSWORD
+    volumes:
+      - nfs_sshwifty_conf:/config  
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.ssh.rule=Host(`ssh.${DOMAIN_SWARM}`,`ssh.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.ssh.entrypoints=websecure
+        - traefik.http.routers.ssh.service=ssh
+        - traefik.http.routers.ssh.middlewares=noauth-chain@file
+        - traefik.http.services.ssh.loadbalancer.server.port=8182
+        - homepage.group=Metrics & Monitor
+        - homepage.name=Sshwifty
+        - homepage.icon=terminal.png
+        - homepage.href=https://ssh.${DOMAIN_SWARM}:4/
+        - homepage.description=Sshwifty Web SSH & Telnet Client
+        - homepage.ping=sshwifty
+        - homepage.weight=20
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.application == true
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 600M
 
 
 networks:
