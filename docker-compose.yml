@@ -39,7 +39,7 @@ services:
       - 21114:21114
     environment:
       HOST: 0.0.0.0
-      CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:4 #修改CSRF_TRUSTED_ORIGINS为你的访问地址
+      CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT} #修改CSRF_TRUSTED_ORIGINS为你的访问地址
       TZ: ${TZ}   
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
@@ -54,7 +54,7 @@ services:
         - homepage.group=Application
         - homepage.name=RustDesk API Server
         - homepage.icon=rustdesk.png
-        - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:4/
+        - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
         - homepage.weight=41
@@ -102,7 +102,7 @@ services:
         - homepage.group=Application
         - homepage.name=Next Terminal
         - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
-        - homepage.href=https://terminal.${DOMAIN_SWARM}:4/
+        - homepage.href=https://terminal.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=堡垒机
         - homepage.siteMonitor=http://next-terminal:8088
         - homepage.weight=42
@@ -129,12 +129,12 @@ services:
         - traefik.http.routers.ssh.rule=Host(`ssh.${DOMAIN_SWARM}`,`ssh.${DOMAIN_EMERGENCY}`)
         - traefik.http.routers.ssh.entrypoints=websecure
         - traefik.http.routers.ssh.service=ssh
-        - traefik.http.routers.ssh.middlewares=noauth-chain@file
+        - traefik.http.routers.ssh.middlewares=authentik,noauth-chain@file
         - traefik.http.services.ssh.loadbalancer.server.port=8182
         - homepage.group=Application
         - homepage.name=Sshwifty
         - homepage.icon=terminal.png
-        - homepage.href=https://ssh.${DOMAIN_SWARM}:4/
+        - homepage.href=https://ssh.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=Sshwifty Web SSH & Telnet Client
         - homepage.ping=sshwifty
         - homepage.weight=20
