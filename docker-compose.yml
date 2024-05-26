@@ -186,3 +186,8 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/application/monitor/next-terminal/fonts         
+  nfs_sshwifty_conf:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/metrics/sshwifty/config      
