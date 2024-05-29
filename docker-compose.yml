@@ -15,7 +15,6 @@ services:
       - 21118:21118     
       - 21119:21119
     environment:
-      HOST: 0.0.0.0
       KEY_PRIV: ${RUSTDESK_KEY_PRIV}
       KEY_PUB: ${RUSTDESK_KEY_PUB}
       TZ: ${TZ}        
