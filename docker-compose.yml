@@ -49,7 +49,7 @@ services:
         - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`,`rustdeskapi.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
         - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
-        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,normal-chain@file"
         - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
         - homepage.group=Application
         - homepage.name=RustDesk API Server
@@ -97,7 +97,7 @@ services:
         - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`,`terminal.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.terminal.entrypoints=websecure"
         - "traefik.http.routers.terminal.service=terminal"
-        - "traefik.http.routers.terminal.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.routers.terminal.middlewares=cors-headers@file,normal-chain@file"
         - "traefik.http.services.terminal.loadbalancer.server.port=8088"
         - homepage.group=Application
         - homepage.name=Next Terminal
@@ -129,7 +129,7 @@ services:
         - traefik.http.routers.ssh.rule=Host(`ssh.${DOMAIN_SWARM}`,`ssh.${DOMAIN_EMERGENCY}`)
         - traefik.http.routers.ssh.entrypoints=websecure
         - traefik.http.routers.ssh.service=ssh
-        - traefik.http.routers.ssh.middlewares=authentik@file,noauth-chain@file
+        - traefik.http.routers.ssh.middlewares=auth,normal-chain@file
         - traefik.http.services.ssh.loadbalancer.server.port=8182
         - homepage.group=Application
         - homepage.name=Sshwifty
