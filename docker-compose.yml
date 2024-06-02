@@ -116,6 +116,11 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.application == true 
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.next-terminal
+        fluentd-async-connect: "true"  
 
   # Sshwifty
   sshwifty:
