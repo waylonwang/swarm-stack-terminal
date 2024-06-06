@@ -6,9 +6,18 @@ x-defines:
   service-common: &service-common-ref
     networks: [network_cluster]
     restart: on-failure
+  env-common: &env-common-ref
+    NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1}
+    TZ: ${TZ:-Asia/Shanghai}    
+  env-proxy: &env-proxy-ref
+    HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
+    HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
   deploy-common: &deploy-common-ref
     mode: replicated
     replicas: 1
+    restart_policy:
+      condition: on-failure
+      delay: 5s      
   placement-default: &placement-default-ref
     placement:
       constraints:
@@ -23,8 +32,8 @@ services:
   # RustDesk Server远程桌面服务
   # ------------------------------------------------------------
   rustdesk-server:
-    image: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
     <<: *service-common-ref
+    image: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
     ports:
       - 21115:21115
       - 21116:21116
@@ -33,9 +42,9 @@ services:
       - 21118:21118
       - 21119:21119
     environment:
+      <<: *env-common-ref
       KEY_PRIV: ${RUSTDESK_KEY_PRIV}
       KEY_PUB: ${RUSTDESK_KEY_PUB}
-      TZ: ${TZ}
     volumes:
       - nfs_rustdesk_server:/root
     logging:
@@ -51,20 +60,20 @@ services:
         - homepage.description=RustDesk Server
         - homepage.ping=rustdesk-server
         - homepage.weight=40
-      <<: [*deploy-common-ref,*placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
   # RustDesk API远程桌面管理器
   # ------------------------------------------------------------
   rustdesk-api-server:
-    image: ghcr.nju.edu.cn/kingmo888/rustdesk-api-server:latest
     <<: *service-common-ref
+    image: ghcr.nju.edu.cn/kingmo888/rustdesk-api-server:latest
     ports:
       - 21114:21114
     environment:
+      <<: *env-common-ref
       HOST: 0.0.0.0
       CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT} #修改CSRF_TRUSTED_ORIGINS为你的访问地址
-      TZ: ${TZ}
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
     logging:
@@ -87,14 +96,16 @@ services:
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
         - homepage.weight=41
-      <<: [*deploy-common-ref,*placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
   # Next-Terminal终端服务器
   # ------------------------------------------------------------
   guacd:
-    image: dushixiang/guacd:latest
     <<: *service-common-ref
+    image: dushixiang/guacd:latest
+    environment:
+      <<: *env-common-ref
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
     logging:
@@ -103,15 +114,15 @@ services:
         tag: docker.terminal.guacd
         fluentd-async-connect: "true"
     deploy:
-      <<: [*deploy-common-ref,*placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
   next-terminal:
-    image: dushixiang/next-terminal:latest
     <<: *service-common-ref
+    image: dushixiang/next-terminal:latest
     environment:
+      <<: *env-common-ref
       DB: sqlite
       GUACD_HOSTNAME: guacd
       GUACD_PORT: 4822
-      TZ: ${TZ}
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
       - nfs_terminal_fonts:/usr/share/fonts
@@ -135,15 +146,16 @@ services:
         - homepage.description=堡垒机
         - homepage.siteMonitor=http://next-terminal:8088
         - homepage.weight=42
-      <<: [*deploy-common-ref,*placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
   # Sshwifty终端服务器
   # ------------------------------------------------------------
   sshwifty:
-    image: niruix/sshwifty:latest
     <<: *service-common-ref
+    image: niruix/sshwifty:latest
     environment:
+      <<: *env-common-ref
       SSHWIFTY_CONFIG: /config/sshwifty.conf.json
     #   - SSHWIFTY_SHAREDKEY=WEB_ACCESS_PASSWORD
     volumes:
@@ -168,7 +180,7 @@ services:
         - homepage.description=Sshwifty Web SSH & Telnet Client
         - homepage.ping=sshwifty
         - homepage.weight=20
-      <<: [*deploy-common-ref,*placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
       resources:
         limits:
           cpus: '0.3'
