@@ -1,25 +1,48 @@
+---
 # Update Time: 2024-2-1 21:10
 version: "3.4"
 
-services:
-  # RustDesk Server
-  rustdesk-server:
-    image: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
+x-defines:
+  service-common: &service-common-ref
     networks: [network_cluster]
     restart: on-failure
+  deploy-common: &deploy-common-ref
+    mode: replicated
+    replicas: 1
+  placement-default: &placement-default-ref
+    placement:
+      constraints:
+        - node.labels.type == vm
+        - node.labels.terminal == true
+  driver-common: &driver-common-ref
+    type: nfs
+    o: addr=${NFS_SERVER},rw,nfsvers=4
+
+services:
+  # ------------------------------------------------------------
+  # RustDesk Server远程桌面服务
+  # ------------------------------------------------------------
+  rustdesk-server:
+    image: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
+    <<: *service-common-ref
     ports:
       - 21115:21115
       - 21116:21116
       - 21116:21116/udp
       - 21117:21117
-      - 21118:21118     
+      - 21118:21118
       - 21119:21119
     environment:
       KEY_PRIV: ${RUSTDESK_KEY_PRIV}
       KEY_PUB: ${RUSTDESK_KEY_PUB}
-      TZ: ${TZ}        
+      TZ: ${TZ}
     volumes:
       - nfs_rustdesk_server:/root
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.rustdesk-server
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=Application
@@ -28,33 +51,35 @@ services:
         - homepage.description=RustDesk Server
         - homepage.ping=rustdesk-server
         - homepage.weight=40
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true     
+      <<: [*deploy-common-ref,*placement-default-ref]
 
+  # ------------------------------------------------------------
+  # RustDesk API远程桌面管理器
+  # ------------------------------------------------------------
   rustdesk-api-server:
     image: ghcr.nju.edu.cn/kingmo888/rustdesk-api-server:latest
-    networks: [network_cluster]
-    restart: on-failure    
+    <<: *service-common-ref
     ports:
       - 21114:21114
     environment:
       HOST: 0.0.0.0
       CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT} #修改CSRF_TRUSTED_ORIGINS为你的访问地址
-      TZ: ${TZ}   
+      TZ: ${TZ}
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
-    deploy:      
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.rustdesk-api-server
+        fluentd-async-connect: "true"
+    deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`,`rustdeskapi.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.rustdeskapi.entrypoints=websecure"
-        - "traefik.http.routers.rustdeskapi.service=rustdeskapi"
-        - "traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,normal-chain@file"
-        - "traefik.http.services.rustdeskapi.loadbalancer.server.port=21114"
+        - traefik.enable=true
+        - traefik.http.routers.rustdeskapi.rule=Host(`rustdeskapi.${DOMAIN_SWARM}`,`rustdeskapi.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.rustdeskapi.entrypoints=websecure
+        - traefik.http.routers.rustdeskapi.service=rustdeskapi
+        - traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,normal-chain@file
+        - traefik.http.services.rustdeskapi.loadbalancer.server.port=21114
         - homepage.group=Application
         - homepage.name=RustDesk API Server
         - homepage.icon=rustdesk.png
@@ -62,47 +87,47 @@ services:
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
         - homepage.weight=41
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true   
+      <<: [*deploy-common-ref,*placement-default-ref]
 
+  # ------------------------------------------------------------
   # Next-Terminal
+  # ------------------------------------------------------------
   guacd:
     image: dushixiang/guacd:latest
-    networks: [network_cluster]
-    restart: on-failure    
+    <<: *service-common-ref
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
-    deploy:      
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.guacd
+        fluentd-async-connect: "true"
+    deploy:
+      <<: [*deploy-common-ref,*placement-default-ref]
   next-terminal:
     image: dushixiang/next-terminal:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       DB: sqlite
       GUACD_HOSTNAME: guacd
       GUACD_PORT: 4822
-      TZ: ${TZ} 
+      TZ: ${TZ}
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
-      - nfs_terminal_fonts:/usr/share/fonts 
-    deploy:      
+      - nfs_terminal_fonts:/usr/share/fonts
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.next-terminal
+        fluentd-async-connect: "true"
+    deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`,`terminal.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.terminal.entrypoints=websecure"
-        - "traefik.http.routers.terminal.service=terminal"
-        - "traefik.http.routers.terminal.middlewares=auth,cors-headers@file,normal-chain@file"
-        - "traefik.http.services.terminal.loadbalancer.server.port=8088"
+        - traefik.enable=true
+        - traefik.http.routers.terminal.rule=Host(`terminal.${DOMAIN_SWARM}`,`terminal.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.terminal.entrypoints=websecure
+        - traefik.http.routers.terminal.service=terminal
+        - traefik.http.routers.terminal.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.terminal.loadbalancer.server.port=8088
         - homepage.group=Application
         - homepage.name=Next Terminal
         - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
@@ -110,28 +135,24 @@ services:
         - homepage.description=堡垒机
         - homepage.siteMonitor=http://next-terminal:8088
         - homepage.weight=42
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true 
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.next-terminal
-        fluentd-async-connect: "true"  
+      <<: [*deploy-common-ref,*placement-default-ref]
 
+  # ------------------------------------------------------------
   # Sshwifty
+  # ------------------------------------------------------------
   sshwifty:
     image: niruix/sshwifty:latest
-    networks: [network_cluster]
-    restart: on-failure    
+    <<: *service-common-ref
     environment:
       SSHWIFTY_CONFIG: /config/sshwifty.conf.json
     #   - SSHWIFTY_SHAREDKEY=WEB_ACCESS_PASSWORD
     volumes:
-      - nfs_sshwifty_conf:/config  
+      - nfs_sshwifty_conf:/config
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.terminal.sshwifty
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -147,10 +168,7 @@ services:
         - homepage.description=Sshwifty Web SSH & Telnet Client
         - homepage.ping=sshwifty
         - homepage.weight=20
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.application == true
+      <<: [*deploy-common-ref,*placement-default-ref]
       resources:
         limits:
           cpus: '0.3'
@@ -161,42 +179,31 @@ networks:
   network_cluster:
     external: true
 
-x-common-keys-volume: &common-keys-volume
-  type: nfs
-  o: addr=${NFS_SERVER},rw,nfsvers=4
-
-x-common-media-main-volume: &common-media-main-volume
-  type: nfs
-  o: addr=${MEDIA_SERVER},rw,nfsvers=4
-
-x-common-media-ext-volume: &common-media-ext-volume
-  type: nfs
-  o: addr=${MEDIA_EXT_SERVER},rw,nfsvers=4
-
 volumes:
-  # NFS     
+  # NFS
   nfs_rustdesk_server:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/monitor/rustdesk/data   
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/application/monitor/rustdesk/data
   nfs_rustdesk_api_db:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/monitor/rustdeskapi/db  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/application/monitor/rustdeskapi/db
   nfs_terminal_data:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/monitor/next-terminal/data         
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/application/monitor/next-terminal/data
   nfs_terminal_fonts:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/application/monitor/next-terminal/fonts         
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/application/monitor/next-terminal/fonts
   nfs_sshwifty_conf:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/metrics/sshwifty/config      
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/metrics/sshwifty/config
+...
