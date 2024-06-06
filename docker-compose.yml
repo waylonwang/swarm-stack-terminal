@@ -90,7 +90,7 @@ services:
       <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
-  # Next-Terminal
+  # Next-Terminal终端服务器
   # ------------------------------------------------------------
   guacd:
     image: dushixiang/guacd:latest
@@ -138,7 +138,7 @@ services:
       <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
-  # Sshwifty
+  # Sshwifty终端服务器
   # ------------------------------------------------------------
   sshwifty:
     image: niruix/sshwifty:latest
