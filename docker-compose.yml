@@ -141,7 +141,7 @@ services:
         - traefik.http.services.terminal.loadbalancer.server.port=8088
         - homepage.group=Metrics & Monitor
         - homepage.name=Next Terminal
-        - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/nextterminal.png
         - homepage.href=https://terminal.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=Next Terminal堡垒机
         - homepage.siteMonitor=http://next-terminal:8088
