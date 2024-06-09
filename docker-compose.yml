@@ -54,7 +54,7 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - homepage.group=Application
+        - homepage.group=Metrics & Monitor
         - homepage.name=RustDesk Server
         - homepage.icon=rustdesk.png
         - homepage.description=RustDesk Server
@@ -89,7 +89,7 @@ services:
         - traefik.http.routers.rustdeskapi.service=rustdeskapi
         - traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,normal-chain@file
         - traefik.http.services.rustdeskapi.loadbalancer.server.port=21114
-        - homepage.group=Application
+        - homepage.group=Metrics & Monitor
         - homepage.name=RustDesk API Server
         - homepage.icon=rustdesk.png
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
@@ -139,7 +139,7 @@ services:
         - traefik.http.routers.terminal.service=terminal
         - traefik.http.routers.terminal.middlewares=auth,cors-headers@file,normal-chain@file
         - traefik.http.services.terminal.loadbalancer.server.port=8088
-        - homepage.group=Application
+        - homepage.group=Metrics & Monitor
         - homepage.name=Next Terminal
         - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
         - homepage.href=https://terminal.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
@@ -173,7 +173,7 @@ services:
         - traefik.http.routers.ssh.service=ssh
         - traefik.http.routers.ssh.middlewares=auth,normal-chain@file
         - traefik.http.services.ssh.loadbalancer.server.port=8182
-        - homepage.group=Application
+        - homepage.group=Metrics & Monitor
         - homepage.name=Sshwifty
         - homepage.icon=terminal.png
         - homepage.href=https://ssh.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
