@@ -33,7 +33,7 @@ services:
   # ------------------------------------------------------------
   rustdesk-server:
     <<: *service-common-ref
-    image: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/rustdesk/rustdesk-server-s6:1.1.11-1-amd64
     ports:
       - 21115:21115
       - 21116:21116
@@ -67,7 +67,7 @@ services:
   # ------------------------------------------------------------
   rustdesk-api-server:
     <<: *service-common-ref
-    image: ghcr.nju.edu.cn/kingmo888/rustdesk-api-server:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/kingmo888/rustdesk-api-server:v1.5.0.1
     ports:
       - 21114:21114
     environment:
@@ -103,7 +103,7 @@ services:
   # ------------------------------------------------------------
   guacd:
     <<: *service-common-ref
-    image: dushixiang/guacd:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dushixiang/guacd:1.5.5
     environment:
       <<: *env-common-ref
     volumes:
@@ -117,7 +117,7 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
   next-terminal:
     <<: *service-common-ref
-    image: dushixiang/next-terminal:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dushixiang/next-terminal:v1.3.9
     environment:
       <<: *env-common-ref
       DB: sqlite
@@ -153,7 +153,7 @@ services:
   # ------------------------------------------------------------
   sshwifty:
     <<: *service-common-ref
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/niruix/sshwifty:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/niruix/sshwifty:0.3.11-beta-release
     environment:
       <<: *env-common-ref
       SSHWIFTY_CONFIG: /config/sshwifty.conf.json
