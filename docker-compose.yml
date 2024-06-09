@@ -55,11 +55,11 @@ services:
     deploy:
       labels:
         - homepage.group=Metrics & Monitor
-        - homepage.name=RustDesk Server
+        - homepage.name=RustDesk Server远程桌面服务
         - homepage.icon=rustdesk.png
         - homepage.description=RustDesk Server
         - homepage.ping=rustdesk-server
-        - homepage.weight=40
+        - homepage.weight=30
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -90,16 +90,16 @@ services:
         - traefik.http.routers.rustdeskapi.middlewares=cors-headers@file,normal-chain@file
         - traefik.http.services.rustdeskapi.loadbalancer.server.port=21114
         - homepage.group=Metrics & Monitor
-        - homepage.name=RustDesk API Server
+        - homepage.name=RustDesk API远程桌面管理器
         - homepage.icon=rustdesk.png
         - homepage.href=https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=RustDesk API Server
         - homepage.siteMonitor=http://rustdesk-api-server:21114
-        - homepage.weight=41
+        - homepage.weight=31
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
-  # Next-Terminal终端服务器
+  # Next-Terminal堡垒机
   # ------------------------------------------------------------
   guacd:
     <<: *service-common-ref
@@ -140,16 +140,16 @@ services:
         - traefik.http.routers.terminal.middlewares=auth,cors-headers@file,normal-chain@file
         - traefik.http.services.terminal.loadbalancer.server.port=8088
         - homepage.group=Metrics & Monitor
-        - homepage.name=Next Terminal
+        - homepage.name=Next Terminal堡垒机
         - homepage.icon=https://www.waylon.wang:4/images/services/nextterminal.png
         - homepage.href=https://terminal.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=堡垒机
         - homepage.siteMonitor=http://next-terminal:8088
-        - homepage.weight=42
+        - homepage.weight=32
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
-  # Sshwifty终端服务器
+  # Sshwifty Web SSH终端
   # ------------------------------------------------------------
   sshwifty:
     <<: *service-common-ref
@@ -174,12 +174,12 @@ services:
         - traefik.http.routers.ssh.middlewares=auth,normal-chain@file
         - traefik.http.services.ssh.loadbalancer.server.port=8182
         - homepage.group=Metrics & Monitor
-        - homepage.name=Sshwifty
+        - homepage.name=Sshwifty Web SSH终端
         - homepage.icon=terminal.png
         - homepage.href=https://ssh.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=Sshwifty Web SSH & Telnet Client
         - homepage.ping=sshwifty
-        - homepage.weight=20
+        - homepage.weight=40
       <<: [*deploy-common-ref, *placement-default-ref]
       resources:
         limits:
