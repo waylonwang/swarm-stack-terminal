@@ -12,6 +12,8 @@ x-defines:
   env-proxy: &env-proxy-ref
     HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
     HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
+    http_proxy: ${OPENCLASH_HTTP_PROXY}
+    https_proxy: ${OPENCLASH_HTTP_PROXY}
   deploy-common: &deploy-common-ref
     mode: replicated
     replicas: 1
