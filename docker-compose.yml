@@ -35,7 +35,7 @@ services:
   # ------------------------------------------------------------
   rustdesk-server:
     <<: *service-common-ref
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/rustdesk/rustdesk-server-s6:1.1.11-1-amd64
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/rustdesk/rustdesk-server-s6:1.1.11-amd64
     ports:
       - 21115:21115
       - 21116:21116
