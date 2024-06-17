@@ -35,6 +35,7 @@ services:
   # ------------------------------------------------------------
   rustdesk-server:
     <<: *service-common-ref
+    # image-ref: rustdesk/rustdesk-server-s6:1.1.10-3-amd64
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/rustdesk/rustdesk-server-s6:1.1.10-3-amd64
     ports:
       - 21115:21115
@@ -69,6 +70,7 @@ services:
   # ------------------------------------------------------------
   rustdesk-api-server:
     <<: *service-common-ref
+    # image-ref: kingmo888/rustdesk-api-server:v1.5.0.1
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/kingmo888/rustdesk-api-server:v1.5.0.1
     ports:
       - 21114:21114
@@ -105,6 +107,7 @@ services:
   # ------------------------------------------------------------
   guacd:
     <<: *service-common-ref
+    # image-ref: dushixiang/guacd:1.5.5
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dushixiang/guacd:1.5.5
     environment:
       <<: *env-common-ref
@@ -119,6 +122,7 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
   next-terminal:
     <<: *service-common-ref
+    # image-ref: dushixiang/next-terminal:v1.3.9
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dushixiang/next-terminal:v1.3.9
     environment:
       <<: *env-common-ref
@@ -155,6 +159,7 @@ services:
   # ------------------------------------------------------------
   sshwifty:
     <<: *service-common-ref
+    # image-ref: niruix/sshwifty:0.3.11-beta-release
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/niruix/sshwifty:0.3.11-beta-release
     environment:
       <<: *env-common-ref
