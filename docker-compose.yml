@@ -50,11 +50,11 @@ services:
       KEY_PUB: ${RUSTDESK_KEY_PUB}
     volumes:
       - nfs_rustdesk_server:/root
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.rustdesk-server
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.terminal.rustdesk-server
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=Metrics & Monitor
@@ -80,11 +80,11 @@ services:
       CSRF_TRUSTED_ORIGINS: https://rustdeskapi.${DOMAIN_SWARM}:${EXTERNAL_PORT} #修改CSRF_TRUSTED_ORIGINS为你的访问地址
     volumes:
       - nfs_rustdesk_api_db:/rustdesk-api-server/db #修改/yourpath/db为你宿主机数据库挂载目录
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.rustdesk-api-server
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.terminal.rustdesk-api-server
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -132,11 +132,11 @@ services:
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
       - nfs_terminal_fonts:/usr/share/fonts
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.next-terminal
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.terminal.next-terminal
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -167,11 +167,11 @@ services:
     #   - SSHWIFTY_SHAREDKEY=WEB_ACCESS_PASSWORD
     volumes:
       - nfs_sshwifty_conf:/config
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.sshwifty
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.terminal.sshwifty
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
