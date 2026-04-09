@@ -113,11 +113,11 @@ services:
       <<: *env-common-ref
     volumes:
       - nfs_terminal_data:/usr/local/next-terminal/data
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.terminal.guacd
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.terminal.guacd
+    #     fluentd-async-connect: "true"
     deploy:
       <<: [*deploy-common-ref, *placement-default-ref]
   next-terminal:
