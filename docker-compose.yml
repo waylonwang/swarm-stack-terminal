@@ -4,7 +4,7 @@ version: "3.4"
 
 x-defines:
   service-common: &service-common-ref
-    networks: [network_cluster]
+    networks: [network_swarm]
     restart: on-failure
   env-common: &env-common-ref
     NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1}
@@ -195,7 +195,7 @@ services:
 
 
 networks:
-  network_cluster:
+  network_swarm:
     external: true
 
 volumes:
