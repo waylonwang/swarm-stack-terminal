@@ -55,6 +55,7 @@ services:
       <<: *env-common-ref
       KEY_PRIV: ${RUSTDESK_KEY_PRIV}
       KEY_PUB: ${RUSTDESK_KEY_PUB}
+      ALWAYS_USE_RELAY: "Y"  # ★ 家宽+同 NAT 环境下，打洞地址不可达，统一走中继
     volumes:
       - nfs_rustdesk_server:/root
     # logging:
