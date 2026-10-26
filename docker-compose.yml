@@ -45,12 +45,12 @@ services:
     #   - 21118:21118
     #   - 21119:21119
     ports:
-      - { target: 21115, published: "21115", protocol: tcp, mode: host }
-      - { target: 21116, published: "21116", protocol: tcp, mode: host }
-      - { target: 21116, published: "21116", protocol: udp, mode: host }
-      - { target: 21117, published: "21117", protocol: tcp, mode: host }
-      - { target: 21118, published: "21118", protocol: tcp, mode: host }
-      - { target: 21119, published: "21119", protocol: tcp, mode: host }    
+      - { target: 21115, published: 21115, protocol: tcp, mode: host }
+      - { target: 21116, published: 21116, protocol: tcp, mode: host }
+      - { target: 21116, published: 21116, protocol: udp, mode: host }
+      - { target: 21117, published: 21117, protocol: tcp, mode: host }
+      - { target: 21118, published: 21118, protocol: tcp, mode: host }
+      - { target: 21119, published: 21119, protocol: tcp, mode: host }
     environment:
       <<: *env-common-ref
       KEY_PRIV: ${RUSTDESK_KEY_PRIV}
